@@ -1,0 +1,11 @@
+{
+    "files.exclude": {
+        // "**/*.js": { "when": "$(basename).ts" },
+        // "**/**.js": { "when": "$(basename).tsx" },
+        "**/**.js.map": { },
+        "package.json": { },
+        // "node_modules": { },
+        "package-lock.json": { },
+        "**.code-workspace": { }
+    }
+}

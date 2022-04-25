@@ -1,0 +1,17 @@
+@import 'nord.css';
+
+body {
+  margin: 0;
+  background-color: var(--nord0);
+  color: var(--nord6);
+  font-family: 'Fira Code', monospace;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}

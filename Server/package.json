@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "bson": "^4.6.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "mongodb": "^4.5.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.26"
+  }
+}
