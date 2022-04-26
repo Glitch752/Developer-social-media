@@ -1,0 +1,162 @@
+:root {
+    --grid-left-size: 15rem;
+    --grid-right-size: 15rem;
+    --grid-gap: 2rem;
+}
+
+main {
+    padding: 0;
+    max-width: 100%;
+}
+
+.menuBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    width: calc(100% - 4rem);
+    height: 5rem;
+    background-color: var(--nord1);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.searchInput {
+    font-size: 2.5rem;
+    height: 2.5rem;
+    transform: translateY(-0.25rem);
+    border: none;
+    outline: none;
+    background-color: var(--nord2);
+    color: var(--nord7);
+}
+.searchIcon {
+    margin-left: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: var(--nord7);
+    transition: fill 0.1s;
+}
+.searchIcon:hover {
+    fill: var(--nord4);
+}
+
+.menuButtons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 5rem;
+}
+.menuButton {
+    width: 3rem;
+    height: 3rem;
+    fill: var(--nord7);
+    transition: fill 0.1s;
+}
+.menuButton:hover {
+    fill: var(--nord4);
+}
+
+.contentGrid {
+    display: grid;
+    grid-template-columns: var(--grid-left-size) 1fr var(--grid-right-size);
+    grid-template-rows: auto;
+    grid-template-areas: "left main right";
+    grid-gap: var(--grid-gap);
+    height: calc(100% - 7rem);
+    margin-top: 5rem;
+    padding: 2rem 0;
+    width: 100%;
+    overflow: auto;
+}
+.contentGridLeft {
+    grid-area: left;
+    background-color: var(--nord2);
+}
+
+.optionsPaneSelector {
+    display: flex;
+    flex-direction: column;
+}
+.optionsPaneSelectorItem {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 0.5rem 0;
+}
+.optionsPaneSelectorIcon {
+    margin: 0 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: var(--nord7);
+    transition: fill 0.1s;
+}
+.optionsPaneSelectorItem:hover .optionsPaneSelectorIcon {
+    fill: var(--nord4);
+}
+.optionsPaneSelectorItem:hover {
+    background-color: var(--nord3);
+}
+.optionsPaneSelectorSub {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+.optionsPaneSelectorSubItem {
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: var(--nord7);
+    transition: fill 0.1s;
+    width: calc(100% - 2rem);
+    display: flex;
+    align-items: center;
+    padding: 0.2rem 0 0.2rem 2rem;
+}
+.optionsPaneSelectorSubIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: var(--nord7);
+    margin-right: 0.5rem;
+    transition: fill 0.1s;
+}
+.optionsPaneSelectorSubItem:hover .optionsPaneSelectorSubIcon {
+    fill: var(--nord4);
+}
+
+.optionsPaneSelectorSubItem:hover {
+    background-color: var(--nord2);
+}
+
+.contentGridCenter {
+    grid-area: main;
+    background-color: green;
+    
+}
+
+.contentGridRight {
+    grid-area: right;
+    background-color: blue;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius: 10px;
+    position: absolute;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}

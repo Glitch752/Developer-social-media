@@ -1,9 +1,11 @@
-import { removeArrayItem } from "../Functions/Util";
+const bcrypt = require('bcrypt');
 
-import bcrypt from 'bcrypt';
-const saltRounds = 10;
+import { removeArrayItem } from "../Functions/Util";
+import { UserClient } from "./UserClient";
 
 import { v4 as uuidv4 } from 'uuid';
+
+const saltRounds = 10;
 
 export class User {
     id: number;
@@ -17,12 +19,13 @@ export class User {
 
     authKey: string;
     
-    constructor(id: number, username: string, email: string, password: string, firstName: string, lastName: string, birthDate: number) {
+    constructor(id: number, username: string, email: string, password: string, firstName: string, lastName: string, birthDate: number, alreadyHashed: boolean = false) {
         this.id = id;
         this.username = username;
         this.email = email;
 
-        this.hashPassword();
+        if (alreadyHashed) this.password = password;
+        else this.hashPassword(password);
 
         this.firstName = firstName;
         this.lastName = lastName;
@@ -42,7 +45,15 @@ export class User {
     //#region Authentication and Password Management
 
     public checkPassword(password: string): boolean {
+        console.log(bcrypt.compareSync(password, this.password));
+
         return bcrypt.compareSync(password, this.password);
+    }
+
+    public hashPassword(password: string) {
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hash = bcrypt.hashSync(password, salt);
+        this.password = hash;
     }
 
     public setNewAuthKey(): string {
@@ -50,10 +61,8 @@ export class User {
         return this.authKey;
     }
 
-    public hashPassword() {
-        const salt = bcrypt.genSaltSync(saltRounds);
-        const hash = bcrypt.hashSync(this.password, salt);
-        this.password = hash;
+    public toClient(): UserClient {
+        return new UserClient(this.id, this.username, this.email, this.firstName, this.lastName, this.birthDate, this.authKey);
     }
 
     //#endregion

@@ -1,16 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
+const bcrypt = require('bcrypt');
 const Util_1 = require("../Functions/Util");
-const bcrypt_1 = require("bcrypt");
-const saltRounds = 10;
+const UserClient_1 = require("./UserClient");
 const uuid_1 = require("uuid");
+const saltRounds = 10;
 class User {
-    constructor(id, username, email, password, firstName, lastName, birthDate) {
+    constructor(id, username, email, password, firstName, lastName, birthDate, hashed = false) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.hashPassword();
+        if (hashed)
+            this.password = password;
+        else
+            this.hashPassword(password);
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
@@ -24,16 +28,20 @@ class User {
     }
     //#region Authentication and Password Management
     checkPassword(password) {
-        return bcrypt_1.default.compareSync(password, this.password);
+        console.log(bcrypt.compareSync(password, this.password));
+        return bcrypt.compareSync(password, this.password);
+    }
+    hashPassword(password) {
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hash = bcrypt.hashSync(password, salt);
+        this.password = hash;
     }
     setNewAuthKey() {
         this.authKey = (0, uuid_1.v4)();
         return this.authKey;
     }
-    hashPassword() {
-        const salt = bcrypt_1.default.genSaltSync(saltRounds);
-        const hash = bcrypt_1.default.hashSync(this.password, salt);
-        this.password = hash;
+    toClient() {
+        return new UserClient_1.UserClient(this.id, this.username, this.email, this.firstName, this.lastName, this.birthDate, this.authKey);
     }
 }
 exports.User = User;

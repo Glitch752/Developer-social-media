@@ -1,10 +1,11 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-const BSON = require('bson');
 
 import { MongoClient, Db, Collection } from 'mongodb';
 
 import * as DataHandler from './Functions/DataHandler';
+import * as Database from './Functions/Database';
 import { User } from './Classes/User';
 
 //#region Express initialization
@@ -12,26 +13,32 @@ import { User } from './Classes/User';
 const app = express();
 app.use(cors());
 
+var jsonParser = bodyParser.json()
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 //#endregion
 
 //#region Database initialization
 
-const url = 'mongodb://localhost:27017';
-const client = new MongoClient(url);
+const url = 'mongodb://127.0.0.1:27017';
 var db: Db;
 var users: Collection;
 var posts: Collection;
 
-async function main() {
-    await client.connect();
+MongoClient.connect(url, (err, client) => {
+    if (err) throw err;
+
+    console.log('Connected to mongodb');
+
     db = client.db("stackunderflow");
-    users = db.collection('users');
-    posts = db.collection('posts');
-}
+    users = db.collection("users");
+    posts = db.collection("posts");
+
+});
 
 //#endregion
 
-app.get('/api/v1/getFeedPosts', (req, res) => {
+app.get('/api/v1/getFeedPosts', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
     // TODO: Get posts from database
@@ -39,7 +46,7 @@ app.get('/api/v1/getFeedPosts', (req, res) => {
     res.send(JSON.stringify(data));
 });
 
-app.get('/api/v1/getFullPost', (req, res) => {
+app.get('/api/v1/getFullPost', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
     // TODO: Get full post from database
@@ -47,7 +54,7 @@ app.get('/api/v1/getFullPost', (req, res) => {
     res.send(JSON.stringify(data));
 });
 
-app.post('/api/v1/createPost', (req, res) => {
+app.post('/api/v1/createPost', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
     // TODO: Create post and return post data to client
@@ -55,7 +62,7 @@ app.post('/api/v1/createPost', (req, res) => {
     res.send(JSON.stringify(data));
 });
 
-app.post('/api/v1/createComment', (req, res) => {
+app.post('/api/v1/createComment', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
     // TODO: Create comment and return comment data to client
@@ -65,27 +72,47 @@ app.post('/api/v1/createComment', (req, res) => {
 
 // Login and register
 
-app.post('/api/v1/auth/login', (req, res) => {
+app.post('/api/v1/auth/login', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
-    const formData = req.body;
+    const body = req.body;
 
-    data = { response: "Request succeeded", success: true, data: { authKey: users[0].setNewAuthKey() } }; // Todo: Get user id from database
+    users.findOne({ $or: [{ username: `${body.username}` }, { email: `${body.username}` }] }).then(dbRes => {
+
+        // Checks if the user is in database.
+        if (!dbRes) {
+            data = { response: "User not found", success: false };
+            res.send(JSON.stringify(data));
+            return;
+        }
+
+        // Converts the json object to a user object.
+        var user: User = new User(dbRes.id, dbRes.username, dbRes.email, dbRes.password, dbRes.firstName, dbRes.lastName, dbRes.birthDate, true);
+
+        // Checks if the password is correct.
+        if (!user.checkPassword(body.password)) {
+            data = { response: "Wrong password", success: false };
+            res.send(JSON.stringify(data));
+            return;
+        }
+
+        // Returns new authkey if the password is correct.
+        data = { response: "Login successful", success: true, data: { authKey: user.setNewAuthKey() } };
+        
+        res.send(JSON.stringify(data));
+    });
+});
+
+app.post('/api/v1/auth/verify', jsonParser, function (req, res) {
+    var data: any = { response: "Request failed", success: false };
 
     res.send(JSON.stringify(data));
 });
 
-app.post('/api/v1/auth/verify', (req, res) => {
+app.post('/api/v1/auth/register', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
-    res.send(JSON.stringify(data));
-});
-
-app.post('/api/v1/auth/register', (req, res) => {
-    var data: any = { response: "Request failed", success: false };
-
-    console.log(req.body);
-    const body = JSON.parse(req.body);
+    const body = req.body;
 
     const minimumAgeYears = 13;
     const minimumAge = new Date(Date.now() - (minimumAgeYears * 365 * 24 * 60 * 60 * 1000));
@@ -98,25 +125,39 @@ app.post('/api/v1/auth/register', (req, res) => {
         return;
     }
 
-    // TODO: Check if username or email already exists in database
+    users.findOne({ $or: [{ username: `${body.username}` }, { email: `${body.username}` }] }, (err, dbRes) => {
+        if (dbRes) {
+            data = { response: "Username or email already exists", success: false };
+            res.send(JSON.stringify(data));
 
-    var user = new User(
-        DataHandler.currentUser,
-        body.username,
-        body.email,
-        body.password,
-        body.firstName,
-        body.lastName,
-        parseInt(body.birthDate)
-    );
+            return;
+        }
 
-    var authKey = user.setNewAuthKey();
-
-    data = { response: "Request succeeded", success: true, data: { authKey: authKey } };
-
-    users.insertOne(BSON.serialize(user));
-
-    res.send(JSON.stringify(data));
+        var user = new User(
+            DataHandler.currentUser,
+            body.username,
+            body.email,
+            body.password,
+            body.firstName,
+            body.lastName,
+            parseInt(body.birthDate)
+        );
+    
+        var authKey = user.setNewAuthKey();
+    
+        data = { response: "Request succeeded", success: true, data: { authKey: authKey } };
+    
+        users.insertOne(user, (err, result) => {
+            if (err) {
+                data = { response: "Database error", success: false };
+                res.send(JSON.stringify(data));
+                throw err;
+            }
+    
+        });
+    
+        res.send(JSON.stringify(data));
+    });
 });
 
 //#region Express closing initialization

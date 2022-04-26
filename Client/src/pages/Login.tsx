@@ -76,9 +76,17 @@ function LoginForm() {
                 loadingStep++;
             }, 80);
 
+            const data = {
+                username: formData.get("username"),
+                password: formData.get("password")
+            }
+
             const response = await fetch(APIlink + "auth/login", {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
             })
             const json = await response.json();
 
@@ -175,16 +183,23 @@ function RegisterForm() {
                 loadingStep++;
             }, 80);
 
+            const data = { 
+                username: formData.get("username"),
+                email: formData.get("email"),
+                password: formData.get("password"),
+                lastName: formData.get("lastName"),
+                firstName: formData.get("firstName"),
+                birthDate: formData.get("birthDate") 
+            };
+
+            console.log(data);
+
             const response = await fetch(APIlink + "auth/register", {
                 method: 'POST',
-                body: JSON.stringify({ 
-                    username: formData.get("username"),
-                    email: formData.get("email"),
-                    password: formData.get("password"),
-                    lastName: formData.get("lastName"),
-                    firstName: formData.get("firstName"),
-                    birthDate: formData.get("birthDate") 
-                })
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
             })
             const json = await response.json();
 
