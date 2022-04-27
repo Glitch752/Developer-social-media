@@ -10,7 +10,7 @@ function Feed(props) {
     const navigate = useNavigate();
 
     useEffectOnce(() => {
-        props.authentication(navigate);
+        props.authentication(navigate, 0);
     });
 
     return (

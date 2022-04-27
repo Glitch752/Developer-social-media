@@ -1,11 +1,31 @@
 // @ts-ignore
 import styles from './Login.module.css';
-import React from 'react';
+import React, { useState } from 'react';
+import { Navigate, useNavigate, useNavigationType } from 'react-router-dom';
 
 const APIlink = "http://localhost:25564/api/v1/";
 
 function Login() {
     const [tab, setTab] = React.useState('login');
+
+    let navigate = useNavigate();
+
+    useState(async () => {
+        let data = { authKey: getCookie('authKey'), intention: 0 };
+
+        const response = await fetch(APIlink + "auth/verify", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        const json = await response.json();
+
+        if(json.success) {
+            navigate('/feed');
+        }
+    });
 
     return (
         <main>
@@ -28,6 +48,8 @@ function LoginForm() {
     const loadingSequence = [ "⢀⠀", "⡀⠀", "⠄⠀", "⢂⠀", "⡂⠀", "⠅⠀", "⢃⠀", "⡃⠀", "⠍⠀", "⢋⠀", "⡋⠀", "⠍⠁", "⢋⠁", "⡋⠁", "⠍⠉", "⠋⠉", "⠋⠉", "⠉⠙", "⠉⠙", "⠉⠩", "⠈⢙", "⠈⡙", "⢈⠩", "⡀⢙", "⠄⡙", "⢂⠩", "⡂⢘", "⠅⡘", "⢃⠨", "⡃⢐", "⠍⡐", "⢋⠠", "⡋⢀", "⠍⡁", "⢋⠁", "⡋⠁", "⠍⠉", "⠋⠉", "⠋⠉", "⠉⠙", "⠉⠙", "⠉⠩", "⠈⢙", "⠈⡙", "⠈⠩", "⠀⢙", "⠀⡙", "⠀⠩", "⠀⢘", "⠀⡘", "⠀⠨", "⠀⢐", "⠀⡐", "⠀⠠", "⠀⢀", "⠀⡀"];
     const loading = React.useRef(null);
     const error = React.useRef(null);
+
+    const navigate = useNavigate();
 
     const submitForm = async (e) => {
         e.preventDefault();
@@ -79,10 +101,11 @@ function LoginForm() {
 
             setCookie("authKey", json.data.authKey, 7);
 
-            console.log(json);
             clearInterval(isLoading);
 
             loading.current.innerHTML = "Login";
+
+            navigate("/feed");
         } catch(error) {
             console.error(error);
             clearInterval(isLoading);
@@ -109,6 +132,8 @@ function RegisterForm() {
     const loadingSequence = [ "⢀⠀", "⡀⠀", "⠄⠀", "⢂⠀", "⡂⠀", "⠅⠀", "⢃⠀", "⡃⠀", "⠍⠀", "⢋⠀", "⡋⠀", "⠍⠁", "⢋⠁", "⡋⠁", "⠍⠉", "⠋⠉", "⠋⠉", "⠉⠙", "⠉⠙", "⠉⠩", "⠈⢙", "⠈⡙", "⢈⠩", "⡀⢙", "⠄⡙", "⢂⠩", "⡂⢘", "⠅⡘", "⢃⠨", "⡃⢐", "⠍⡐", "⢋⠠", "⡋⢀", "⠍⡁", "⢋⠁", "⡋⠁", "⠍⠉", "⠋⠉", "⠋⠉", "⠉⠙", "⠉⠙", "⠉⠩", "⠈⢙", "⠈⡙", "⠈⠩", "⠀⢙", "⠀⡙", "⠀⠩", "⠀⢘", "⠀⡘", "⠀⠨", "⠀⢐", "⠀⡐", "⠀⠠", "⠀⢀", "⠀⡀"];
     const loading = React.useRef(null);
     const error = React.useRef(null);
+
+    const navigate = useNavigate();
 
     const submitForm = async (e) => {
         e.preventDefault();
@@ -190,6 +215,7 @@ function RegisterForm() {
                 
                 loading.current.innerHTML = "Error";
                 error.current.innerHTML = json.response;
+                return;
             }
 
             setCookie("authKey", json.data.authKey, 7);
@@ -198,6 +224,8 @@ function RegisterForm() {
             clearInterval(isLoading);
 
             loading.current.innerHTML = "Register";
+
+            navigate("/feed");
         } catch(error) {
             console.error(error);
             clearInterval(isLoading);

@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Routes, Route, NavigateFunction } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, NavigateFunction, useNavigate } from 'react-router-dom';
 
 // @ts-ignore
 import NotFound from './pages/NotFound.tsx';
@@ -7,7 +7,7 @@ import NotFound from './pages/NotFound.tsx';
 import Login from './pages/Login.tsx';
 // @ts-ignore
 import Feed from './pages/Feed.tsx';
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 
 const apiLink = "http://localhost:25564/api/v1/";
 
@@ -17,10 +17,10 @@ function App() {
    * @param {NavigateFunction} navigate The object reference to allow page navigation.
    * @param {number} intention The level of access requested by user. 0 = general user access, 1 = admin level access, 2 = super admin level access.
    */
-  async function authentication(navigate: NavigateFunction, intention: number) {
+  async function authentication(navigate: NavigateFunction, intention: number, callback: () => void = () => {}) {
     // Intention is the level of access requested by the user.
 
-    let data = { authKey: getCookie('authKey'), intention: 0};
+    let data = { authKey: getCookie('authKey'), intention: intention };
 
     const response = await fetch(apiLink + "auth/verify", {
       method: 'POST',
@@ -34,6 +34,8 @@ function App() {
     if(!json.success) {
         console.error("Error: " + json.response);
         navigate("/login");
+    } else {
+        callback();
     }
   }
 
@@ -41,7 +43,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<span>No page here</span>} />
+          <Route path="/" element={<Redirect authentication={authentication} />} />
           <Route path="/login" element={<Login authentication={authentication} />} />
           <Route path="/feed" element={<Feed authentication={authentication} />} />
           <Route path="*" element={<NotFound />} />
@@ -49,6 +51,22 @@ function App() {
       </BrowserRouter>
     </div>
   );
+}
+
+function Redirect(props) {
+  let navigate = useNavigate();
+
+  useLayoutEffect(() => {
+    props.authentication(navigate, 0, () => {
+      navigate("/feed");
+    });
+  }, []);
+
+  return (
+    <div>
+      <h1>Loading...</h1>
+    </div>
+  )
 }
 
 function getCookie(name) {
