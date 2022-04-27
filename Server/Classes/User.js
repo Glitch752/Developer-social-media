@@ -7,11 +7,11 @@ const UserClient_1 = require("./UserClient");
 const uuid_1 = require("uuid");
 const saltRounds = 10;
 class User {
-    constructor(id, username, email, password, firstName, lastName, birthDate, hashed = false) {
+    constructor(id, username, email, password, firstName, lastName, birthDate, alreadyHashed = false) {
         this.id = id;
         this.username = username;
         this.email = email;
-        if (hashed)
+        if (alreadyHashed)
             this.password = password;
         else
             this.hashPassword(password);

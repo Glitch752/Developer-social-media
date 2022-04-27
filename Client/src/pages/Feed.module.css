@@ -72,7 +72,50 @@ main {
 }
 .contentGridLeft {
     grid-area: left;
+}
+
+.contentSection {
+    width: 100%;
     background-color: var(--nord2);
+    padding: 0.5rem 0;
+}
+
+.contentSectionTitle {
+    margin-left: 1rem;    
+}
+.followedLanguages {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 1rem;
+}
+.followedLanguage {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--nord10);
+    border-radius: 100vh;
+    padding: 0.1rem 0.5rem;
+    margin: 0.1rem;
+    position: relative;
+}
+.followedLanguageRemove {
+    display: none;
+    color: var(--nord11);
+    cursor: pointer;
+    text-shadow: 
+        0.1rem 0.1rem var(--nord3),
+        0rem 0rem 0.2rem var(--nord3);
+    font-weight: bold;
+    border-radius: 100vh;
+    margin: 0.1rem;
+    transition: color 0.1s;
+    position: absolute;
+    right: 0.4rem;
+}
+.followedLanguage:hover .followedLanguageRemove {
+    display: inline;
+}
+.followedLanguageRemove:hover {
+    color: var(--nord12);
 }
 
 .optionsPaneSelector {
@@ -130,13 +173,22 @@ main {
 
 .contentGridCenter {
     grid-area: main;
-    background-color: green;
-    
+}
+.createPost {
+    background-color: var(--nord10);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    transition: background-color 0.1s;
+}
+.createPost:hover {
+    background-color: var(--nord9);
 }
 
 .contentGridRight {
     grid-area: right;
-    background-color: blue;
 }
 
 /* width */

@@ -1,33 +1,11 @@
 // @ts-ignore
 import styles from './Login.module.css';
-import React, { useLayoutEffect } from 'react';
-
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 const APIlink = "http://localhost:25564/api/v1/";
 
 function Login() {
     const [tab, setTab] = React.useState('login');
-
-    const navigate = useNavigate();
-
-    useLayoutEffect(() => {
-        const authKey = getCookie("authKey");
-        if(authKey) {
-            fetch(APIlink + "auth/verify", {
-                method: 'POST',
-                body: JSON.stringify({
-                    authKey: authKey
-                })
-            }).then(response => response.json()).then(data => {
-                if(data.success) {
-                    navigate("/");
-                }
-            }).catch(err => {
-                console.log(err);
-            });
-        }
-    }, [])
 
     return (
         <main>
@@ -96,7 +74,10 @@ function LoginForm() {
                 
                 loading.current.innerHTML = "Error";
                 error.current.innerHTML = json.response;
+                return;
             }
+
+            setCookie("authKey", json.data.authKey, 7);
 
             console.log(json);
             clearInterval(isLoading);

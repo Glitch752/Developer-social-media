@@ -7,6 +7,7 @@ import { MongoClient, Db, Collection } from 'mongodb';
 import * as DataHandler from './Functions/DataHandler';
 import * as Database from './Functions/Database';
 import { User } from './Classes/User';
+import { UserClient } from './Classes/UserClient';
 
 //#region Express initialization
 
@@ -38,12 +39,29 @@ MongoClient.connect(url, (err, client) => {
 
 //#endregion
 
+function respondWithError(error: string, res: any) {
+    let data = { response: error, success: false };
+    res.send(JSON.stringify(data));
+}
+
 app.get('/api/v1/getFeedPosts', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
     // TODO: Get posts from database
+    posts.find({}).sort({ dateCreated: -1 }).limit(10).toArray().then((dbRes) => {
+        if (!dbRes) {
+            data = { response: "No posts found", success: false };
+            res.send(JSON.stringify(data));
+            return;
+        }
 
-    res.send(JSON.stringify(data));
+        data = { response: "Successfully got posts", success: true, data: { posts: dbRes } };
+
+        res.send(JSON.stringify(data));
+    }).catch((err) => {
+        data = { response: "Error getting posts", success: false };
+        res.send(JSON.stringify(data));
+    });
 });
 
 app.get('/api/v1/getFullPost', jsonParser, function (req, res) {
@@ -96,9 +114,18 @@ app.post('/api/v1/auth/login', jsonParser, function (req, res) {
             return;
         }
 
-        // Returns new authkey if the password is correct.
-        data = { response: "Login successful", success: true, data: { authKey: user.setNewAuthKey() } };
-        
+        user.setNewAuthKey();
+
+        // Updates the user in the database.
+        users.updateOne({ id: user.id }, { $set: { authKey: user.authKey } }).then(() => {
+            data = { response: "Login successful", success: true, data: { authKey: user.authKey } };
+            res.send(JSON.stringify(data));
+        }).catch(err => {
+            data = { response: "Database Error: Login failed", success: false, data: { authKey: null } };
+            res.send(JSON.stringify(data));
+        });
+    }).catch(err => {
+        data = { response: "Database Error: Login failed", success: false, data: { authKey: null } };
         res.send(JSON.stringify(data));
     });
 });
@@ -106,7 +133,29 @@ app.post('/api/v1/auth/login', jsonParser, function (req, res) {
 app.post('/api/v1/auth/verify', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
-    res.send(JSON.stringify(data));
+    const body = req.body;
+
+    users.findOne({ authKey: `${body.authKey}` }).then(dbRes => {
+        // Checks if the user is in database.
+        if (!dbRes) {
+            data = { response: "User not found", success: false };
+            res.send(JSON.stringify(data));
+            return;
+        }
+
+        // Converts the json object to a user object.
+        var user: UserClient = new User(dbRes.id, dbRes.username, dbRes.email, dbRes.password, dbRes.firstName, dbRes.lastName, dbRes.birthDate, true).toClient();
+
+        // Returns user data if the authkey is correct.
+        data = { response: "Verification successful", success: true, data: { user } };
+
+        res.send(JSON.stringify(data));
+    }).catch(err => {
+        data = { response: "Verification failed", success: false, data: { user: null } };
+        res.send(JSON.stringify(data));
+    });
+
+    // TODO: Add multilevel security verification
 });
 
 app.post('/api/v1/auth/register', jsonParser, function (req, res) {
@@ -125,7 +174,7 @@ app.post('/api/v1/auth/register', jsonParser, function (req, res) {
         return;
     }
 
-    users.findOne({ $or: [{ username: `${body.username}` }, { email: `${body.username}` }] }, (err, dbRes) => {
+    users.findOne({ $or: [{ username: `${body.username}` }, { email: `${body.username}` }] }).then(dbRes => {
         if (dbRes) {
             data = { response: "Username or email already exists", success: false };
             res.send(JSON.stringify(data));
@@ -145,17 +194,15 @@ app.post('/api/v1/auth/register', jsonParser, function (req, res) {
     
         var authKey = user.setNewAuthKey();
     
-        data = { response: "Request succeeded", success: true, data: { authKey: authKey } };
-    
-        users.insertOne(user, (err, result) => {
-            if (err) {
-                data = { response: "Database error", success: false };
-                res.send(JSON.stringify(data));
-                throw err;
-            }
-    
+        users.insertOne(user).then(dbRes => {
+            data = { response: "Request succeeded", success: true, data: { authKey: authKey } };
+            res.send(JSON.stringify(data));
+        }).catch(err => {
+            data = { response: "Registration failed", success: false, data: { authKey: null } };
+            res.send(JSON.stringify(data));
         });
-    
+    }).catch(err => {
+        data = { response: "Registration failed", success: false, data: { user: null } };
         res.send(JSON.stringify(data));
     });
 });
