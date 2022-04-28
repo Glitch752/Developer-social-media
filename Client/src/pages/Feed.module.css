@@ -163,29 +163,75 @@ main {
     margin-right: 0.5rem;
     transition: fill 0.1s;
 }
-.optionsPaneSelectorSubItem:hover .optionsPaneSelectorSubIcon {
-    fill: var(--nord4);
-}
-
-.optionsPaneSelectorSubItem:hover {
-    background-color: var(--nord2);
-}
 
 .contentGridCenter {
     grid-area: main;
 }
+
 .createPost {
     background-color: var(--nord10);
-    border-radius: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 3rem;
+    font-size: 2rem;
+    padding: 1rem;
+    font-weight: bold;
     transition: background-color 0.1s;
 }
 .createPost:hover {
     background-color: var(--nord9);
 }
+
+.posts {
+    margin-top: 1rem;
+}
+.post {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    background-color: var(--nord1);
+    padding: 1rem;
+    font-size: 1rem;
+    position: relative;
+    color: var(--nord5);
+}
+.postHeader {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.postAuthor {
+    position: absolute;
+    top: 1rem;
+    right: 5rem;
+    font-size: 1.5rem;
+    transition: color 0.1s;
+}
+.postAuthorProfile {
+    background-color: var(--nord14);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 100%;
+    position: absolute;
+    top: -0.25rem;
+    right: -4rem;
+}
+.postAuthor:hover {
+    text-decoration: none;
+    color: var(--nord7);
+}
+.postBodyCode {
+    font-family: monospace;
+    font-size: 1rem;
+    max-width:  calc(100% - 2rem);
+    white-space: pre-wrap;
+    background-color: var(--nord0);
+    padding: 1rem;
+    border-top: 0.1rem solid var(--nord7);
+    border-left: 0.1rem solid var(--nord7);
+    border-bottom: 0.1rem solid var(--nord3);
+    border-right: 0.1rem solid var(--nord3);
+}
+
 
 .contentGridRight {
     grid-area: right;

@@ -1,6 +1,6 @@
-import { Post } from './Post';
+import { PostClient } from './PostClient';
 
-export class Comment extends Post {
+export class CommentClient extends PostClient {
     id: number;
     author: number;
     dateCreated: number;
@@ -13,8 +13,4 @@ export class Comment extends Post {
 
         this.parents = [];
     }
-}
-
-function toClient() {
-
 }

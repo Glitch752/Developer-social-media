@@ -9,4 +9,6 @@ class Comment extends Post_1.Post {
     }
 }
 exports.Comment = Comment;
+function toClient() {
+}
 //# sourceMappingURL=Comment.js.map

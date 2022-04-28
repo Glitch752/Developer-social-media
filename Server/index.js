@@ -48,7 +48,6 @@ app.get('/api/v1/getFeedPosts', jsonParser, function (req, res) {
 });
 app.get('/api/v1/getFullPost', jsonParser, function (req, res) {
     var data = { response: "Request failed", success: false };
-    // TODO: Get full post from database
     res.send(JSON.stringify(data));
 });
 app.post('/api/v1/createPost', jsonParser, function (req, res) {

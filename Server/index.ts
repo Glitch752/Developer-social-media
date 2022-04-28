@@ -9,6 +9,11 @@ import * as Database from './Functions/Database';
 import { User } from './Classes/User';
 import { UserClient } from './Classes/UserClient';
 
+import { Post } from './Classes/Post';
+import { Comment } from './Classes/Comment';
+import { PostClient } from './Classes/PostClient';
+import { CommentClient } from './Classes/CommentClient';
+
 //#region Express initialization
 
 const app = express();
@@ -67,7 +72,7 @@ app.get('/api/v1/getFeedPosts', jsonParser, function (req, res) {
 app.get('/api/v1/getFullPost', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
-    // TODO: Get full post from database
+    
 
     res.send(JSON.stringify(data));
 });
