@@ -8,7 +8,7 @@ import 'highlight.js/styles/nord.css';
 
 // @ts-ignore
 import styles from './Feed.module.css';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function Feed(props) {
     const navigate = useNavigate();
@@ -67,7 +67,7 @@ function Feed(props) {
                     </div>
                 </div>
                 <div className={styles.contentGridCenter}>
-                    <div className={styles.createPost}>Create post</div>
+                    <CreatePost />
                     <div className={styles.posts}>
                         <div className={styles.post}>
                             <span className={styles.postHeader}>Title</span>
@@ -153,3 +153,103 @@ demoCode(10);`}
 }
 
 export default Feed;
+
+function CreatePost() {
+    const [showCreatePost, setShowCreatePost] = useState(null);
+
+    const defaultPostSections = [{type: "Text", content: ""}];
+
+    const getPostSections = () => {
+        return showCreatePost.map((section, index) => {
+            return (
+                <div className={styles.createPostSection} key={index}>
+                    <div className={styles.createPostSectionDelete} onClick={() => deleteSection(index)}>X</div>
+                    {getSectionContent(section)}
+                </div>
+            );
+        });
+    }
+
+    const changeText = (e) => {
+        const element = e.target;
+        const previous = e.target.previousSibling;
+        previous.innerHTML = hljs.highlightAuto(element.value).value;
+    }
+
+    const getSectionContent = (section) => {
+        switch (section.type) {
+            case "Text":
+                return <textarea className={styles.createPostTextarea} onChange={(e) => resizeTextArea(e)} placeholder="Text content here..." defaultValue={section.content}></textarea>;
+            case "Code":
+                return <pre className={styles.postBodyCode}>
+                    {/* Not sure, but this might allow for XSS. From my testing, it does not. */}
+                    <code className={styles.codeHighlight} dangerouslySetInnerHTML={{ __html: hljs.highlightAuto(section.content).value }}></code>
+                    <textarea className={styles.codeEditor} onChange={(e) => {
+                        resizeCodeArea(e);
+                        changeText(e);
+                    }} spellCheck="false" placeholder="Code content here..." defaultValue={section.content}></textarea>
+                </pre>
+        }
+    }
+
+    const createPost = () => {
+        setShowCreatePost(defaultPostSections);
+    }
+
+    const resizeCodeArea = (e) => {
+        e.target.style.height = 'auto';
+        
+        let height = e.target.scrollHeight + 32;
+
+        e.target.style.height = height + 'px';
+
+        e.target.previousSibling.style.height = 'auto';
+        e.target.previousSibling.style.height = height + 'px';
+    }
+
+    const resizeTextArea = (e) => {
+        e.target.style.height = 'auto';
+        e.target.style.height = e.target.scrollHeight + 'px';
+    }
+
+    const addSection = (type) => {
+        setShowCreatePost([...showCreatePost, {type: type, content: ""}]);
+    }
+
+    const deleteSection = (index) => {
+        setShowCreatePost(showCreatePost.filter((_, i) => i !== index));
+    }
+
+    return (
+        <>
+            <div className={styles.createPost} onClick={() => createPost()}>Create post</div>
+            {
+                showCreatePost ? (
+                    <div className={styles.createPostForm}>
+                        <input className={styles.createPostTitle} placeholder="Title" />
+                        <div className={styles.postAuthor}>
+                            <span className={styles.postAuthorName}>Author</span>
+                            <div className={styles.postAuthorProfile}></div>
+                        </div>
+                        <div className={styles.createPostBody}>
+                            {getPostSections()}
+                        </div>
+                        <div className={styles.createPostBottom}>
+                            <div className={styles.createPostSectionAdds}>
+                                <div className={styles.createPostSectionAdd} onClick={() => addSection("Text")}>
+                                    <span className={styles.createPostSectionAddPlus}>+</span>
+                                    <span className={styles.createPostSectionAddText}>Abc...</span>
+                                </div>
+                                <div className={styles.createPostSectionAdd} onClick={() => addSection("Code")}>
+                                    <span className={styles.createPostSectionAddPlus}>+</span>
+                                    <span className={styles.createPostSectionAddText}>Code()</span>
+                                </div>
+                            </div>
+                            <div className={styles.createPostSubmit}>Submit</div>
+                        </div>
+                    </div>
+                ) : null
+            }
+        </>
+    );
+}
