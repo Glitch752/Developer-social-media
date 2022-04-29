@@ -155,7 +155,7 @@ demoCode(10);`}
 export default Feed;
 
 function CreatePost() {
-    const [showCreatePost, setShowCreatePost] = useState(null);
+    let [showCreatePost, setShowCreatePost] = useState(null);
 
     const defaultPostSections = [{type: "Text", content: ""}];
 
@@ -164,7 +164,7 @@ function CreatePost() {
             return (
                 <div className={styles.createPostSection} key={index}>
                     <div className={styles.createPostSectionDelete} onClick={() => deleteSection(index)}>X</div>
-                    {getSectionContent(section)}
+                    {getSectionContent(section, index)}
                 </div>
             );
         });
@@ -176,10 +176,20 @@ function CreatePost() {
         previous.innerHTML = hljs.highlightAuto(element.value).value;
     }
 
-    const getSectionContent = (section) => {
+    const updateContent = (value, index) => {
+        const newPostSections = [...showCreatePost];
+        newPostSections[index].content = value;
+
+        showCreatePost = newPostSections;
+    }
+
+    const getSectionContent = (section, index) => {
         switch (section.type) {
             case "Text":
-                return <textarea className={styles.createPostTextarea} onChange={(e) => resizeTextArea(e)} placeholder="Text content here..." defaultValue={section.content}></textarea>;
+                return <textarea className={styles.createPostTextarea} onChange={(e) => {
+                    resizeTextArea(e);
+                    updateContent(e.target.value, index);
+                }} placeholder="Text content here..." defaultValue={section.content}></textarea>;
             case "Code":
                 return <pre className={styles.postBodyCode}>
                     {/* Not sure, but this might allow for XSS. From my testing, it does not. */}
@@ -187,6 +197,7 @@ function CreatePost() {
                     <textarea className={styles.codeEditor} onChange={(e) => {
                         resizeCodeArea(e);
                         changeText(e);
+                        updateContent(e.target.value, index);
                     }} spellCheck="false" placeholder="Code content here..." defaultValue={section.content}></textarea>
                 </pre>
         }
@@ -220,6 +231,15 @@ function CreatePost() {
         setShowCreatePost(showCreatePost.filter((_, i) => i !== index));
     }
 
+    const post = () => {
+        console.log(showCreatePost);
+        // TODO: send ajax request to server to post the post and also make sure the post is valid
+        // Rules to implement:
+        // Post must have a title
+        // Post must have at least one section
+        // All sections must have content
+    }
+
     return (
         <>
             <div className={styles.createPost} onClick={() => createPost()}>Create post</div>
@@ -245,7 +265,7 @@ function CreatePost() {
                                     <span className={styles.createPostSectionAddText}>Code()</span>
                                 </div>
                             </div>
-                            <div className={styles.createPostSubmit}>Submit</div>
+                            <div className={styles.createPostSubmit} onClick={() => post()}>Submit</div>
                         </div>
                     </div>
                 ) : null

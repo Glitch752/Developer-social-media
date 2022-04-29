@@ -350,6 +350,7 @@ main {
 .createPostSubmit {
     background-color: var(--nord10);
     padding: 0.5rem 1rem;
+    z-index: 201;
 }
 .createPostSubmit:hover {
     background-color: var(--nord9);
