@@ -8,7 +8,7 @@ import 'highlight.js/styles/nord.css';
 
 // @ts-ignore
 import styles from './Feed.module.css';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 function Feed(props) {
     const navigate = useNavigate();
@@ -157,6 +157,9 @@ export default Feed;
 function CreatePost() {
     let [showCreatePost, setShowCreatePost] = useState(null);
 
+    const title = useRef(null);
+    const errorMessage = useRef(null);
+
     const defaultPostSections = [{type: "Text", content: ""}];
 
     const getPostSections = () => {
@@ -170,13 +173,13 @@ function CreatePost() {
         });
     }
 
-    const changeText = (e) => {
+    const changeText = async (e) => {
         const element = e.target;
         const previous = e.target.previousSibling;
         previous.innerHTML = hljs.highlightAuto(element.value).value;
     }
 
-    const updateContent = (value, index) => {
+    const updateContent = async (value, index) => {
         const newPostSections = [...showCreatePost];
         newPostSections[index].content = value;
 
@@ -194,7 +197,7 @@ function CreatePost() {
                 return <pre className={styles.postBodyCode}>
                     {/* Not sure, but this might allow for XSS. From my testing, it does not. */}
                     <code className={styles.codeHighlight} dangerouslySetInnerHTML={{ __html: hljs.highlightAuto(section.content).value }}></code>
-                    <textarea className={styles.codeEditor} onChange={(e) => {
+                    <textarea className={styles.codeEditor} onChange={async (e) => {
                         resizeCodeArea(e);
                         changeText(e);
                         updateContent(e.target.value, index);
@@ -207,7 +210,7 @@ function CreatePost() {
         setShowCreatePost(defaultPostSections);
     }
 
-    const resizeCodeArea = (e) => {
+    const resizeCodeArea = async (e) => {
         e.target.style.height = 'auto';
         
         let height = e.target.scrollHeight + 32;
@@ -232,12 +235,38 @@ function CreatePost() {
     }
 
     const post = () => {
-        console.log(showCreatePost);
-        // TODO: send ajax request to server to post the post and also make sure the post is valid
-        // Rules to implement:
-        // Post must have a title
-        // Post must have at least one section
-        // All sections must have content
+        let postData = {
+            title: title.current.value,
+            sections: showCreatePost
+        }
+
+        // Check if the post has a title
+        if (postData.title.replace(/\s/g, '') === "") {
+            error("Post must have a title");
+            return;
+        }
+
+        // Check if the post has at least one section
+        if (postData.sections.length === 0) {
+            error("Post must have at least one section");
+            return;
+        }
+
+        // Check if all sections have content
+        for (let section of postData.sections) {
+            if (section.content.replace(/\s/g, '') === "") {
+                error("All sections must have content");
+                return;
+            }
+        }
+
+        error("");
+
+        
+    }
+
+    const error = (message: string) => {
+        errorMessage.current.innerHTML = message;
     }
 
     return (
@@ -246,7 +275,8 @@ function CreatePost() {
             {
                 showCreatePost ? (
                     <div className={styles.createPostForm}>
-                        <input className={styles.createPostTitle} placeholder="Title" />
+                        <span className={styles.createPostError} ref={errorMessage}></span>
+                        <input className={styles.createPostTitle} ref={title} placeholder="Title" />
                         <div className={styles.postAuthor}>
                             <span className={styles.postAuthorName}>Author</span>
                             <div className={styles.postAuthorProfile}></div>

@@ -193,6 +193,10 @@ main {
     position: relative;
     color: var(--nord5);
 }
+.createPostError {
+    color: var(--nord11);
+    font-size: 1rem;
+}
 .createPostTitle {
     border: none;
     outline: none;
