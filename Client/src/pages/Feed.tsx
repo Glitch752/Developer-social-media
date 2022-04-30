@@ -10,6 +10,8 @@ import 'highlight.js/styles/nord.css';
 import styles from './Feed.module.css';
 import { useRef, useState } from 'react';
 
+const APIlink = "http://localhost:25564/api/v1/";
+
 function Feed(props) {
     const navigate = useNavigate();
 
@@ -197,6 +199,7 @@ function CreatePost() {
                 return <pre className={styles.postBodyCode}>
                     {/* Not sure, but this might allow for XSS. From my testing, it does not. */}
                     <code className={styles.codeHighlight} dangerouslySetInnerHTML={{ __html: hljs.highlightAuto(section.content).value }}></code>
+                    {/* TODO: Change this to a better editor. It has a few problems. */}
                     <textarea className={styles.codeEditor} onChange={async (e) => {
                         resizeCodeArea(e);
                         changeText(e);
@@ -213,12 +216,10 @@ function CreatePost() {
     const resizeCodeArea = async (e) => {
         e.target.style.height = 'auto';
         
-        let height = e.target.scrollHeight + 32;
+        let height = e.target.scrollHeight;
 
         e.target.style.height = height + 'px';
-
-        e.target.previousSibling.style.height = 'auto';
-        e.target.previousSibling.style.height = height + 'px';
+        e.target.parentElement.style.height = height - 32 + 'px';
     }
 
     const resizeTextArea = (e) => {
@@ -234,7 +235,7 @@ function CreatePost() {
         setShowCreatePost(showCreatePost.filter((_, i) => i !== index));
     }
 
-    const post = () => {
+    const post = async () => {
         let postData = {
             title: title.current.value,
             sections: showCreatePost
@@ -262,7 +263,27 @@ function CreatePost() {
 
         error("");
 
-        
+        // Send the post to the server
+        let data = postData;
+
+        const response = await fetch(APIlink + "createPost", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        const json = await response.json();
+
+        console.log(json);
+
+        if(json.success) {
+            closePostMenu();
+        }
+    }
+
+    const closePostMenu = () => {
+        setShowCreatePost(null);
     }
 
     const error = (message: string) => {

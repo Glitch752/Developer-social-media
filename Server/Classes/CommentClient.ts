@@ -1,16 +1,17 @@
 import { PostClient } from './PostClient';
+import { Section } from './Section';
 
 export class CommentClient extends PostClient {
     id: number;
     author: number;
     dateCreated: number;
-    content: string;
-    comments: Array<Comment>;
+    sections: Array<Section>;
+    comments: Array<CommentClient>;
     parents: Array<number>;
 
-    constructor(id: number, author: number, content: string) {
-        super(id, author, content);
+    constructor(id: number, author: number, dateCreated: number, sections: Array<Section>, comments: Array<CommentClient>, parents: Array<number>) {
+        super(id, author, dateCreated, null, sections, comments);
 
-        this.parents = [];
+        this.parents = parents;
     }
 }

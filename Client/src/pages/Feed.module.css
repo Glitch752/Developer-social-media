@@ -292,6 +292,7 @@ main {
     border-bottom: 0.1rem solid var(--nord3);
     border-right: 0.1rem solid var(--nord3);
     position: relative;
+    min-height: 2.5rem;
 }
 
 .codeHighlight {
@@ -310,7 +311,6 @@ main {
     width: calc(100% - 2rem);
     color: transparent;
     caret-color: var(--nord5);
-    height: 100%;
     resize: none;
     font-family: monospace;
     font-size: 1rem;

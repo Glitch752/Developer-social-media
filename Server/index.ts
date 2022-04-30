@@ -44,6 +44,13 @@ MongoClient.connect(url, (err, client) => {
 
 //#endregion
 
+//#region Current ID Variables
+
+// TODO: MAKE BETTER SYSTEM FOR CURRENT ID VARIABLES
+var nextPostId = 0;
+
+//#endregion
+
 function respondWithError(error: string, res: any) {
     let data = { response: error, success: false };
     res.send(JSON.stringify(data));
@@ -52,7 +59,6 @@ function respondWithError(error: string, res: any) {
 app.get('/api/v1/getFeedPosts', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
-    // TODO: Get posts from database
     posts.find({}).sort({ dateCreated: -1 }).limit(10).toArray().then((dbRes) => {
         if (!dbRes) {
             data = { response: "No posts found", success: false };
@@ -80,9 +86,24 @@ app.get('/api/v1/getFullPost', jsonParser, function (req, res) {
 app.post('/api/v1/createPost', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
-    // TODO: Create post and return post data to client
+    const body = req.body;
 
-    res.send(JSON.stringify(data));
+    console.log(body);
+
+    var post = new Post(nextPostId, 0, body.title, body.sections);
+
+    posts.insertOne(post).then(dbRes => {
+        data = { response: "Successfully created post", success: true, data: { post: post.toClient() } };
+
+        res.send(JSON.stringify(data));
+
+        nextPostId += 1;
+    }).catch((err) => {
+        console.error(err);
+        
+        respondWithError("Catch Database Error: Post Creation Failed", res);
+        return;
+    });
 });
 
 app.post('/api/v1/createComment', jsonParser, function (req, res) {

@@ -6,6 +6,7 @@ const cors = require('cors');
 const mongodb_1 = require("mongodb");
 const DataHandler = require("./Functions/DataHandler");
 const User_1 = require("./Classes/User");
+const Post_1 = require("./Classes/Post");
 //#region Express initialization
 const app = express();
 app.use(cors());
@@ -26,13 +27,16 @@ mongodb_1.MongoClient.connect(url, (err, client) => {
     posts = db.collection("posts");
 });
 //#endregion
+//#region Current ID Variables
+// TODO: MAKE BETTER SYSTEM FOR CURRENT ID VARIABLES
+var nextPostId = 0;
+//#endregion
 function respondWithError(error, res) {
     let data = { response: error, success: false };
     res.send(JSON.stringify(data));
 }
 app.get('/api/v1/getFeedPosts', jsonParser, function (req, res) {
     var data = { response: "Request failed", success: false };
-    // TODO: Get posts from database
     posts.find({}).sort({ dateCreated: -1 }).limit(10).toArray().then((dbRes) => {
         if (!dbRes) {
             data = { response: "No posts found", success: false };
@@ -52,8 +56,18 @@ app.get('/api/v1/getFullPost', jsonParser, function (req, res) {
 });
 app.post('/api/v1/createPost', jsonParser, function (req, res) {
     var data = { response: "Request failed", success: false };
-    // TODO: Create post and return post data to client
-    res.send(JSON.stringify(data));
+    const body = req.body;
+    console.log(body);
+    var post = new Post_1.Post(nextPostId, 0, body.title, body.sections);
+    posts.insertOne(post).then(dbRes => {
+        data = { response: "Successfully created post", success: true, data: { post: post.toClient() } };
+        res.send(JSON.stringify(data));
+        nextPostId += 1;
+    }).catch((err) => {
+        console.error(err);
+        respondWithError("Catch Database Error: Post Creation Failed", res);
+        return;
+    });
 });
 app.post('/api/v1/createComment', jsonParser, function (req, res) {
     var data = { response: "Request failed", success: false };
