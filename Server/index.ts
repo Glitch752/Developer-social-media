@@ -88,7 +88,25 @@ app.post('/api/v1/createPost', jsonParser, function (req, res) {
 
     const body = req.body;
 
-    console.log(body);
+    // Check if the post has a title
+    if (body.title.replace(/\s/g, '') === "") {
+        respondWithError("Post must have a title", res);
+        return;
+    }
+
+    // Check if the post has at least one section
+    if (body.sections.length === 0) {
+        respondWithError("Post must have at least one section", res);
+        return;
+    }
+
+    // Check if all sections have content
+    for (let section of body.sections) {
+        if (section.content.replace(/\s/g, '') === "") {
+            respondWithError("All sections must have content", res);
+            return;
+        }
+    }
 
     var post = new Post(nextPostId, 0, body.title, body.sections);
 
