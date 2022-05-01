@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Post = void 0;
 const PostClient_1 = require("./PostClient");
+const Database_1 = require("../Functions/Database");
 class Post {
     constructor(id, author, title, sections, comments = []) {
         this.id = id;
@@ -16,7 +17,14 @@ class Post {
         for (var currentComment = 0; currentComment < this.comments.length; currentComment++) {
             clientComments.push(this.comments[currentComment].toClient());
         }
-        return new PostClient_1.PostClient(this.id, this.author, this.dateCreated, this.title, this.sections, clientComments);
+        Database_1.users.findOne({ id: this.author }).then(dbRes => {
+            if (dbRes.username) {
+                return new PostClient_1.PostClient(this.id, dbRes.username, this.dateCreated, this.title, this.sections, clientComments);
+            }
+            else {
+                return null;
+            }
+        });
     }
 }
 exports.Post = Post;

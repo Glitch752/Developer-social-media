@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const mongodb_1 = require("mongodb");
+const Database_1 = require("./Functions/Database");
 const DataHandler = require("./Functions/DataHandler");
 const User_1 = require("./Classes/User");
 const Post_1 = require("./Classes/Post");
@@ -14,18 +14,7 @@ var jsonParser = bodyParser.json();
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 //#endregion
 //#region Database initialization
-const url = 'mongodb://127.0.0.1:27017';
-var db;
-var users;
-var posts;
-mongodb_1.MongoClient.connect(url, (err, client) => {
-    if (err)
-        throw err;
-    console.log('Connected to mongodb');
-    db = client.db("stackunderflow");
-    users = db.collection("users");
-    posts = db.collection("posts");
-});
+(0, Database_1.initDatabase)();
 //#endregion
 //#region Current ID Variables
 // TODO: MAKE BETTER SYSTEM FOR CURRENT ID VARIABLES
@@ -37,7 +26,7 @@ function respondWithError(error, res) {
 }
 app.get('/api/v1/getFeedPosts', jsonParser, function (req, res) {
     var data = { response: "Request failed", success: false };
-    posts.find({}).sort({ dateCreated: -1 }).limit(10).toArray().then((dbRes) => {
+    Database_1.posts.find({}).sort({ dateCreated: -1 }).limit(10).toArray().then((dbRes) => {
         if (!dbRes) {
             data = { response: "No posts found", success: false };
             res.send(JSON.stringify(data));
@@ -57,6 +46,15 @@ app.get('/api/v1/getFullPost', jsonParser, function (req, res) {
 app.post('/api/v1/createPost', jsonParser, function (req, res) {
     var data = { response: "Request failed", success: false };
     const body = req.body;
+    // Regex for allowed characters
+    let allowedCharactersRegex = new RegExp(/[^ -~]+/);
+    // Find the first character that doesn't match the regex
+    let oldTitle = body.title;
+    body.title = body.title.replace(allowedCharactersRegex, "");
+    if (body.title !== oldTitle) {
+        respondWithError("Title contains invalid character: " + oldTitle.match(allowedCharactersRegex), res);
+        return;
+    }
     // Check if the post has a title
     if (body.title.replace(/\s/g, '') === "") {
         respondWithError("Post must have a title", res);
@@ -75,7 +73,7 @@ app.post('/api/v1/createPost', jsonParser, function (req, res) {
         }
     }
     var post = new Post_1.Post(nextPostId, 0, body.title, body.sections);
-    posts.insertOne(post).then(dbRes => {
+    Database_1.posts.insertOne(post).then(dbRes => {
         data = { response: "Successfully created post", success: true, data: { post: post.toClient() } };
         res.send(JSON.stringify(data));
         nextPostId += 1;
@@ -94,7 +92,7 @@ app.post('/api/v1/createComment', jsonParser, function (req, res) {
 app.post('/api/v1/auth/login', jsonParser, function (req, res) {
     var data = { response: "Request failed", success: false };
     const body = req.body;
-    users.findOne({ $or: [{ username: `${body.username}` }, { email: `${body.username}` }] }).then(dbRes => {
+    Database_1.users.findOne({ $or: [{ username: `${body.username}` }, { email: `${body.username}` }] }).then(dbRes => {
         // Checks if the user is in database.
         if (!dbRes) {
             data = { response: "User not found", success: false };
@@ -111,7 +109,7 @@ app.post('/api/v1/auth/login', jsonParser, function (req, res) {
         }
         user.setNewAuthKey();
         // Updates the user in the database.
-        users.updateOne({ id: user.id }, { $set: { authKey: user.authKey } }).then(() => {
+        Database_1.users.updateOne({ id: user.id }, { $set: { authKey: user.authKey } }).then(() => {
             data = { response: "Login successful", success: true, data: { authKey: user.authKey } };
             res.send(JSON.stringify(data));
         }).catch(err => {
@@ -126,7 +124,7 @@ app.post('/api/v1/auth/login', jsonParser, function (req, res) {
 app.post('/api/v1/auth/verify', jsonParser, function (req, res) {
     var data = { response: "Request failed", success: false };
     const body = req.body;
-    users.findOne({ authKey: `${body.authKey}` }).then(dbRes => {
+    Database_1.users.findOne({ authKey: `${body.authKey}` }).then(dbRes => {
         // Checks if the user is in database.
         if (!dbRes) {
             data = { response: "User not found", success: false };
@@ -155,7 +153,7 @@ app.post('/api/v1/auth/register', jsonParser, function (req, res) {
         res.send(JSON.stringify(data));
         return;
     }
-    users.findOne({ $or: [{ username: `${body.username}` }, { email: `${body.username}` }] }).then(dbRes => {
+    Database_1.users.findOne({ $or: [{ username: `${body.username}` }, { email: `${body.username}` }] }).then(dbRes => {
         if (dbRes) {
             data = { response: "Username or email already exists", success: false };
             res.send(JSON.stringify(data));
@@ -163,7 +161,7 @@ app.post('/api/v1/auth/register', jsonParser, function (req, res) {
         }
         var user = new User_1.User(DataHandler.currentUser, body.username, body.email, body.password, body.firstName, body.lastName, parseInt(body.birthDate));
         var authKey = user.setNewAuthKey();
-        users.insertOne(user).then(dbRes => {
+        Database_1.users.insertOne(user).then(dbRes => {
             data = { response: "Request succeeded", success: true, data: { authKey: authKey } };
             res.send(JSON.stringify(data));
         }).catch(err => {

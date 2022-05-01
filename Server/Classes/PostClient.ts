@@ -3,13 +3,13 @@ import { Section } from './Section';
 
 export class PostClient {
     id: number;
-    author: number;
+    author: string;
     dateCreated: number;
     title: string;
     sections: Array<Section>;
     comments: Array<CommentClient>;
 
-    constructor(id: number, author: number, dateCreated: number, title: string, sections: Array<Section>, comments: Array<CommentClient>) {
+    constructor(id: number, author: string, dateCreated: number, title: string, sections: Array<Section>, comments: Array<CommentClient>) {
         this.id = id;
         this.author = author;
         this.dateCreated = dateCreated;

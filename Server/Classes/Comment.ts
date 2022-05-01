@@ -2,6 +2,8 @@ import { Post } from './Post';
 import { Section } from './Section';
 import { CommentClient } from './CommentClient';
 
+import { users } from '../Functions/Database';
+
 export class Comment extends Post {
     id: number;
     author: number;
@@ -16,13 +18,21 @@ export class Comment extends Post {
         this.parents = parents;
     }
 
-    public toClient() {
+    public toClient(): any {
         var clientComments: Array<CommentClient> = [];
 
         for (var currentComment = 0; currentComment < this.comments.length; currentComment++) {
             clientComments.push(this.comments[currentComment].toClient());
         }
 
-        return new CommentClient(this.id, this.author, this.dateCreated, this.sections, clientComments, this.parents);
+        users.findOne({ id: this.author }).then(dbRes => {
+            if (dbRes.username) {
+                return new CommentClient(this.id, dbRes.username, this.dateCreated, this.sections, clientComments, this.parents);
+            } else {
+                return null;
+            }
+        });
+
+
     }
 }

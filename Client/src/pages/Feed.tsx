@@ -15,16 +15,8 @@ const APIlink = "http://localhost:25564/api/v1/";
 function Feed(props) {
     const navigate = useNavigate();
 
-    const code1 = useRef(null);
-
     useEffectOnce(() => {
         props.authentication(navigate, 0);
-        let highlighting = hljs.highlightAuto(code1.current.innerHTML).value;
-
-        // put line number in front of each line
-        // highlighting = highlighting.split('\n').map((line, index) => `<span className=${styles.lineNumber}>${index + 1} | </span>` + line).join('\n');
-
-        code1.current.innerHTML = highlighting;
     });
 
     return (
@@ -55,14 +47,14 @@ function Feed(props) {
                                     Friends
                                 </div>
                                 <div className={styles.optionsPaneSelectorSub}>
-                                    <div className={styles.optionsPaneSelectorSubItem}>
-                                        <svg className={styles.optionsPaneSelectorSubIcon} xmlns="http://www.w3.org/2000/svg" id="Isolation_Mode" data-name="Isolation Mode" viewBox="0 0 24 24" width="512" height="512"><path d="M21,24H18V19a2,2,0,0,0-2-2H8a2,2,0,0,0-2,2v5H3V19a5.006,5.006,0,0,1,5-5h8a5.006,5.006,0,0,1,5,5Z"/><path d="M12,12a6,6,0,1,1,6-6A6.006,6.006,0,0,1,12,12Zm0-9a3,3,0,1,0,3,3A3,3,0,0,0,12,3Z"/></svg>
-                                        James
-                                    </div>
-                                    <div className={styles.optionsPaneSelectorSubItem}>
-                                        <svg className={styles.optionsPaneSelectorSubIcon} xmlns="http://www.w3.org/2000/svg" id="Isolation_Mode" data-name="Isolation Mode" viewBox="0 0 24 24" width="512" height="512"><path d="M21,24H18V19a2,2,0,0,0-2-2H8a2,2,0,0,0-2,2v5H3V19a5.006,5.006,0,0,1,5-5h8a5.006,5.006,0,0,1,5,5Z"/><path d="M12,12a6,6,0,1,1,6-6A6.006,6.006,0,0,1,12,12Zm0-9a3,3,0,1,0,3,3A3,3,0,0,0,12,3Z"/></svg>
-                                        Martha
-                                    </div>
+                                    {
+                                        ["James", "Martha"].map((name, index) => (
+                                            <div className={styles.optionsPaneSelectorSubItem} key={index}>
+                                                <svg className={styles.optionsPaneSelectorSubIcon} xmlns="http://www.w3.org/2000/svg" id="Isolation_Mode" data-name="Isolation Mode" viewBox="0 0 24 24" width="512" height="512"><path d="M21,24H18V19a2,2,0,0,0-2-2H8a2,2,0,0,0-2,2v5H3V19a5.006,5.006,0,0,1,5-5h8a5.006,5.006,0,0,1,5,5Z"/><path d="M12,12a6,6,0,1,1,6-6A6.006,6.006,0,0,1,12,12Zm0-9a3,3,0,1,0,3,3A3,3,0,0,0,12,3Z"/></svg>
+                                                {name}
+                                            </div>
+                                        ))
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -71,81 +63,49 @@ function Feed(props) {
                 <div className={styles.contentGridCenter}>
                     <CreatePost />
                     <div className={styles.posts}>
-                        <div className={styles.post}>
-                            <span className={styles.postHeader}>Title</span>
-                            <div className={styles.postAuthor}>
-                                <span className={styles.postAuthorName}>Author</span>
-                                <div className={styles.postAuthorProfile}></div>
-                            </div>
-                            <span className={styles.postBody}>
-                                <div className={styles.postBodyText}>
-                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Velit vel at nostrum sapiente, maxime necessitatibus assumenda eius magnam in vero nesciunt debitis sequi, aliquid alias earum repellat, quas rem quisquam.
-                                </div>
-                                <pre className={styles.postBodyCode}>
-                                    <code ref={code1}>
-                                        {`function demoCode(argument) {
-    return argument + 20;
-}
-
-// This is a very long line of code that is used to demonstrate the code block's functionality. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Velit vel at nostrum sapiente, maxime necessitatibus assumenda eius magnam in vero nesciunt debitis sequi, aliquid alias earum repellat, quas rem quisquam.
-
-demoCode(10);`}
-                                    </code>
-                                </pre>
-                            </span>
-                        </div>
+                        <Post data={{
+                            title: 'Hello World',
+                            author: 'James',
+                            sections: [
+                                {
+                                    type: 'Text',
+                                    content: 'Hello World'
+                                },
+                                {
+                                    type: 'Code',
+                                    content: 'console.log("Hello World")'
+                                }
+                            ]
+                        }} />
                     </div>
                 </div>
                 <div className={styles.contentGridRight}>
                     <div className={styles.contentSection}>
                         <span className={styles.contentSectionTitle}>Followed languages:</span>
                         <div className={styles.followedLanguages}>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>Javascript</span>
-                                <div className={styles.followedLanguageRemove}>X</div>
-                            </div>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>Python</span>
-                                <div className={styles.followedLanguageRemove}>X</div>
-                            </div>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>C#</span>
-                                <div className={styles.followedLanguageRemove}>X</div>
-                            </div>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>Typescript</span>
-                                <div className={styles.followedLanguageRemove}>X</div>
-                            </div>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>Ruby</span>
-                                <div className={styles.followedLanguageRemove}>X</div>
-                            </div>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>C</span>
-                                <div className={styles.followedLanguageRemove}>X</div>
-                            </div>
+                            {
+                                ["Javascript", "Python", "C#", "Typescript", "Ruby", "C"].map((language, index) => {
+                                    return (
+                                        <div className={styles.followedLanguage} key={index}>
+                                            <span className={styles.followedLanguageName}>{language}</span>
+                                            <div className={styles.followedLanguageRemove}>X</div>
+                                        </div>
+                                    )
+                                })
+                            }
                         </div>
                         <br />
                         <span className={styles.contentSectionTitle}>Recommended languages:</span>
                         <div className={styles.followedLanguages}>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>Go</span>
-                            </div>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>Rust</span>
-                            </div>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>Java</span>
-                            </div>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>Kotlin</span>
-                            </div>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>C++</span>
-                            </div>
-                            <div className={styles.followedLanguage}>
-                                <span className={styles.followedLanguageName}>C</span>
-                            </div>
+                            {
+                                ["Go", "Rust", "Java", "Kotlin", "C++", "C"].map((language, index) => {
+                                    return (
+                                        <div className={styles.followedLanguage} key={index}>
+                                            <span className={styles.followedLanguageName}>{language}</span>
+                                        </div>
+                                    )
+                                })
+                            }
                         </div>
                     </div>
                 </div>
@@ -241,6 +201,17 @@ function CreatePost() {
             sections: showCreatePost
         }
 
+        // Regex for allowed characters
+        let allowedCharactersRegex = new RegExp(/[^ -~]+/);
+
+        // Find the first character that doesn't match the regex
+        let oldTitle = postData.title;
+        postData.title = postData.title.replace(allowedCharactersRegex, "");
+        if (postData.title !== oldTitle) {
+            error("Title contains invalid character: " + oldTitle.match(allowedCharactersRegex));
+            return;
+        }
+
         // Check if the post has a title
         if (postData.title.replace(/\s/g, '') === "") {
             error("Post must have a title");
@@ -323,4 +294,29 @@ function CreatePost() {
             }
         </>
     );
+}
+
+function Post(props) {
+    return (
+        <div className={styles.post}>
+            <span className={styles.postHeader}>{props.data.title}</span>
+            <div className={styles.postAuthor}>
+                <span className={styles.postAuthorName}>{props.data.author}</span>
+                <div className={styles.postAuthorProfile}></div>
+            </div>
+            <span className={styles.postBody}>
+                {props.data.sections.map((section, index) => {
+                    if(section.type === "Text") {
+                        return <div className={styles.postBodyText}>{section.content}</div>;
+                    } else if(section.type === "Code") {
+                        return <pre className={styles.postBodyCode}>
+                                    <code dangerouslySetInnerHTML={
+                                        {__html: hljs.highlightAuto(section.content).value}
+                                    }></code>
+                                </pre>;
+                    }
+                })}
+            </span>
+        </div>
+    )
 }

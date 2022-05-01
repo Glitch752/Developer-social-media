@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-import { MongoClient, Db, Collection } from 'mongodb';
+import { initDatabase, db, users, posts } from './Functions/Database';
 
 import * as DataHandler from './Functions/DataHandler';
 import * as Database from './Functions/Database';
@@ -26,21 +26,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 //#region Database initialization
 
-const url = 'mongodb://127.0.0.1:27017';
-var db: Db;
-var users: Collection;
-var posts: Collection;
-
-MongoClient.connect(url, (err, client) => {
-    if (err) throw err;
-
-    console.log('Connected to mongodb');
-
-    db = client.db("stackunderflow");
-    users = db.collection("users");
-    posts = db.collection("posts");
-
-});
+initDatabase();
 
 //#endregion
 
@@ -87,6 +73,17 @@ app.post('/api/v1/createPost', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
     const body = req.body;
+
+    // Regex for allowed characters
+    let allowedCharactersRegex = new RegExp(/[^ -~]+/);
+
+    // Find the first character that doesn't match the regex
+    let oldTitle = body.title;
+    body.title = body.title.replace(allowedCharactersRegex, "");
+    if (body.title !== oldTitle) {
+        respondWithError("Title contains invalid character: " + oldTitle.match(allowedCharactersRegex), res);
+        return;
+    }
 
     // Check if the post has a title
     if (body.title.replace(/\s/g, '') === "") {
