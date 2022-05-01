@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.posts = exports.users = exports.db = exports.initDatabase = void 0;
 const mongodb_1 = require("mongodb");
-const url = 'mongodb://localhost:27017';
+const url = 'mongodb://127.0.0.1:27017';
 var db;
 exports.db = db;
 var users;
