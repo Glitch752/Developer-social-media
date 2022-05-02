@@ -8,12 +8,13 @@ import 'highlight.js/styles/nord.css';
 
 // @ts-ignore
 import styles from './Feed.module.css';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const APIlink = "http://localhost:25564/api/v1/";
 
 function Feed(props) {
     const navigate = useNavigate();
+    const posts = useRef(null);
 
     useEffectOnce(() => {
         props.authentication(navigate, 0);
@@ -62,8 +63,9 @@ function Feed(props) {
                 </div>
                 <div className={styles.contentGridCenter}>
                     <CreatePost />
-                    <div className={styles.posts}>
-                        <Post data={{
+                    <div className={styles.posts} ref={posts}>
+                        <Posts />
+                        {/* <Post data={{
                             title: 'Hello World',
                             author: 'James',
                             sections: [
@@ -76,7 +78,7 @@ function Feed(props) {
                                     content: 'console.log("Hello World")'
                                 }
                             ]
-                        }} />
+                        }} /> */}
                     </div>
                 </div>
                 <div className={styles.contentGridRight}>
@@ -307,9 +309,9 @@ function Post(props) {
             <span className={styles.postBody}>
                 {props.data.sections.map((section, index) => {
                     if(section.type === "Text") {
-                        return <div className={styles.postBodyText}>{section.content}</div>;
+                        return <div className={styles.postBodyText} key={index}>{section.content}</div>;
                     } else if(section.type === "Code") {
-                        return <pre className={styles.postBodyCode}>
+                        return <pre className={styles.postBodyCode} key={index}>
                                     <code dangerouslySetInnerHTML={
                                         {__html: hljs.highlightAuto(section.content).value}
                                     }></code>
@@ -318,5 +320,35 @@ function Post(props) {
                 })}
             </span>
         </div>
+    )
+}
+
+function Posts() {
+    const [posts, setPosts] = useState([]);
+
+    useEffectOnce(() => {
+        getPostData();
+    });
+
+    const getPostData = async () => {
+        const data = await fetch(APIlink + "getFeedPosts", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        const json = await data.json();
+
+        setPosts(json.data.posts);
+    };
+
+    return (
+        <>
+            {
+                posts ? posts.map((post, index) => {
+                    return <Post data={post} key={index} />
+                }) : null
+            }
+        </>
     )
 }
