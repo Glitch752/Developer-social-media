@@ -8,13 +8,12 @@ import 'highlight.js/styles/nord.css';
 
 // @ts-ignore
 import styles from './Feed.module.css';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 const APIlink = "http://localhost:25564/api/v1/";
 
 function Feed(props) {
     const navigate = useNavigate();
-    const posts = useRef(null);
 
     useEffectOnce(() => {
         props.authentication(navigate, 0);
@@ -63,22 +62,8 @@ function Feed(props) {
                 </div>
                 <div className={styles.contentGridCenter}>
                     <CreatePost />
-                    <div className={styles.posts} ref={posts}>
+                    <div className={styles.posts}>
                         <Posts />
-                        {/* <Post data={{
-                            title: 'Hello World',
-                            author: 'James',
-                            sections: [
-                                {
-                                    type: 'Text',
-                                    content: 'Hello World'
-                                },
-                                {
-                                    type: 'Code',
-                                    content: 'console.log("Hello World")'
-                                }
-                            ]
-                        }} /> */}
                     </div>
                 </div>
                 <div className={styles.contentGridRight}>
