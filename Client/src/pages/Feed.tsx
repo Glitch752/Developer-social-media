@@ -70,7 +70,7 @@ function Feed(props) {
                         <span className={styles.contentSectionTitle}>Followed languages:</span>
                         <div className={styles.followedLanguages}>
                             {
-                                ["Javascript", "Python", "C#", "Typescript", "Ruby", "C"].map((language, index) => {
+                                ["Javascript", "Python", "C#", "Typescript", "Ruby"].map((language, index) => {
                                     return (
                                         <div className={styles.followedLanguage} key={index}>
                                             <span className={styles.followedLanguageName}>{language}</span>

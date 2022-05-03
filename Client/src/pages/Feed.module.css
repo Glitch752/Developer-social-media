@@ -252,6 +252,7 @@ main {
     margin-bottom: 1rem;
     background-color: var(--nord1);
     padding: 1rem;
+    padding-bottom: 0;
     font-size: 1rem;
     position: relative;
     color: var(--nord5);
