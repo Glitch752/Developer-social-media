@@ -456,6 +456,17 @@ main {
 .comment:not(.commentReplies > .comment) {
     padding-bottom: 1rem;
 }
+.commentReplies {
+    position: relative;
+}
+.replyLine {
+    position: absolute;
+    margin-left: 0.2rem;
+    width: 0.25rem;
+    height: 100%;
+    display: inline-block;
+    background-color: var(--nord3);
+}
 
 .contentGridRight {
     grid-area: right;

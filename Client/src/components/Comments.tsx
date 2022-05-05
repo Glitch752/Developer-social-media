@@ -30,6 +30,7 @@ function Comments(props) {
                         </div>
                         <div className={styles.commentText}>{comment.content}</div>
                         <div className={styles.commentReplies}>
+                            <div className={styles.replyLine}></div>
                             {getComments(comment.comments)}
                         </div>
                     </div>
@@ -46,5 +47,4 @@ function Comments(props) {
         </div>
     )
 }
-
 export default Comments;
