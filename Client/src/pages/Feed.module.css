@@ -467,6 +467,19 @@ main {
     display: inline-block;
     background-color: var(--nord3);
 }
+.commentButtons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.2rem;
+}
+.commentButton {
+    font-size: 0.8rem;
+    color: var(--nord6);
+}
+.commentButton:hover {
+    cursor: pointer;
+    color: var(--nord4);
+}
 
 .contentGridRight {
     grid-area: right;

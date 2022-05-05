@@ -29,6 +29,10 @@ function Comments(props) {
                             <div className={styles.commentAuthorProfile}></div>
                         </div>
                         <div className={styles.commentText}>{comment.content}</div>
+                        <div className={styles.commentButtons}>
+                            <div className={styles.commentButton}>Reply</div>
+                            <div className={styles.commentButton}>Report</div>
+                        </div>
                         <div className={styles.commentReplies}>
                             <div className={styles.replyLine}></div>
                             {getComments(comment.comments)}
