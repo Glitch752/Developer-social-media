@@ -433,6 +433,23 @@ main {
     padding-left: 1rem;
     padding-top: 0.5rem;
 }
+.commentAuthor {
+    margin-left: 0.5rem;
+    position: relative;
+}
+.commentAuthorName {
+    font-size: 1rem;
+    font-weight: bold;
+}
+.commentAuthorProfile {
+    background-color: var(--nord14);
+    width: 1.25rem;
+    height: 1.25rem;
+    display: inline-block;
+    position: absolute;
+    margin-left: 0.5rem;
+    border-radius: 100%;
+}
 .commentText {
     font-size: 1rem;
 }
