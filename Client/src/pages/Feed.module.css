@@ -361,6 +361,68 @@ main {
     background-color: var(--nord9);
 }
 
+.createComment {
+    background-color: var(--nord10);
+    display: inline-block;
+    width: max-content;
+    font-size: 1.5rem;
+    transition: background-color 0.1s;
+    margin-bottom: 1rem;
+    padding: 0.1rem 0.5rem;
+}
+.createComment:hover {
+    background-color: var(--nord9);
+}
+.createCommentIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: var(--nord14);
+    margin-right: 0.5rem;
+    transform: translateY(0.25rem);
+}
+
+.createCommentForm {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+.createCommentError {
+    color: var(--nord11);
+    font-size: 1rem;
+}
+.createCommentComment {
+    border: none;
+    outline: none;
+    background-color: var(--nord3);
+    padding: 0.5rem;
+    font-size: 1rem;
+    font-family: 'Fira Code', monospace;
+    color: var(--nord4);
+    width: calc(100% - 1rem);
+    resize: none;;
+    margin-bottom: 0.5rem;
+}
+.createCommentButtons {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    width: 100%;
+}
+.createCommentButton {
+    background-color: var(--nord10);
+    padding: 0.5rem 1rem;
+    color: var(--nord5);
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-family: 'Fira Code', monospace;
+    transition: background-color 0.1s;
+}
+.createCommentButton:hover {
+    background-color: var(--nord9);
+}
+
 .contentGridRight {
     grid-area: right;
 }

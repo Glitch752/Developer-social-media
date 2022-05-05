@@ -4,6 +4,9 @@ import 'highlight.js/styles/nord.css';
 // @ts-ignore
 import styles from '../pages/Feed.module.css';
 
+// @ts-ignore
+import CommentCreator from './CommentCreator.tsx';
+
 function Post(props) {
     return (
         <div className={styles.post}>
@@ -25,6 +28,7 @@ function Post(props) {
                     }
                 })}
             </span>
+            <CommentCreator />
         </div>
     )
 }
