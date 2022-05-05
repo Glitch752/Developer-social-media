@@ -400,7 +400,7 @@ main {
     font-family: 'Fira Code', monospace;
     color: var(--nord4);
     width: calc(100% - 1rem);
-    resize: none;;
+    resize: none;
     margin-bottom: 0.5rem;
 }
 .createCommentButtons {
@@ -421,6 +421,23 @@ main {
 }
 .createCommentButton:hover {
     background-color: var(--nord9);
+}
+
+.comments {
+    margin-bottom: 1rem;
+}
+.comment {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--nord2);
+    padding-left: 1rem;
+    padding-top: 0.5rem;
+}
+.commentText {
+    font-size: 1rem;
+}
+.comment:not(.commentReplies > .comment) {
+    padding-bottom: 1rem;
 }
 
 .contentGridRight {

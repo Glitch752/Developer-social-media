@@ -7,6 +7,9 @@ import styles from '../pages/Feed.module.css';
 // @ts-ignore
 import CommentCreator from './CommentCreator.tsx';
 
+// @ts-ignore
+import Comments from './Comments.tsx';
+
 function Post(props) {
     return (
         <div className={styles.post}>
@@ -25,10 +28,13 @@ function Post(props) {
                                         {__html: hljs.highlightAuto(section.content).value}
                                     }></code>
                                 </pre>;
+                    } else {
+                        return null
                     }
                 })}
             </span>
             <CommentCreator />
+            <Comments post={props.data.id} />
         </div>
     )
 }
