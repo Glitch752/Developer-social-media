@@ -208,6 +208,9 @@ main {
     position: relative;
     color: var(--nord5);
 }
+.postDark {
+    background-color: var(--nord2);
+}
 .postHeader {
     font-size: 1.5rem;
     margin-bottom: 0.5rem;

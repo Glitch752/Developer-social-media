@@ -11,7 +11,7 @@ import Comments from './Comments.tsx';
 function Post(props) {
     const navigate = useNavigate();
     return (
-        <div className={styles.post}>
+        <div className={styles.post + (props.color ? ` ${styles.postDark}` : "")}>
             <span className={styles.postHeader}>{props.data.title}</span>
             <div className={styles.postAuthor}>
                 <span className={styles.postAuthorName} onClick={() => navigate(`/user/${props.data.author}`)}>{props.data.author}</span>

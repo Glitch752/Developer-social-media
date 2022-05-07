@@ -29,9 +29,10 @@
 .userContent {
     margin-top: 10rem;
     background-color: var(--nord1);
-    min-height: calc(100% - 12rem);
+    min-height: calc(100% - 15rem);
     padding: 2rem;
     position: relative;
+    padding-top: 5rem;
 }
 
 .userContentUser {
@@ -49,6 +50,15 @@
 .userContentUserName {
     margin-left: 1rem;
     font-size: 2rem;
+}
+
+.userContentTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+.postsContainer {
+    background-color: var(--nord0);
 }
 
 .contentGridRight {

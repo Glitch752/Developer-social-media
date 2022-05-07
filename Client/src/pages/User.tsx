@@ -8,6 +8,9 @@ import Navbar from '../components/Navbar.tsx';
 // @ts-ignore
 import styles from './User.module.css';
 
+// @ts-ignore
+import Posts from '../components/Posts.tsx';
+
 function User(props) {
     const navigate = useNavigate();
 
@@ -30,6 +33,10 @@ function User(props) {
                         <div className={styles.userContentUser}>
                             <div className={styles.userContentUserPicture}></div>
                             <div className={styles.userContentUserName}>{userID}</div>
+                        </div>
+                        <span className={styles.userContentTitle}>Recent Posts</span>
+                        <div className={styles.postsContainer}>
+                            <Posts color={true} differentApiLink={`getUserPosts/${userID}`} />
                         </div>
                     </div>
                 </div>

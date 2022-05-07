@@ -7,7 +7,7 @@ import Post from './Post.tsx';
 
 const APIlink = "http://localhost:25564/api/v1/";
 
-function Posts() {
+function Posts(props) {
     const [posts, setPosts] = useState([]);
 
     useEffectOnce(() => {
@@ -15,7 +15,7 @@ function Posts() {
     });
 
     const getPostData = async () => {
-        const data = await fetch(APIlink + "getFeedPosts", {
+        const data = await fetch(APIlink + (props.differentApiLink ? props.differentApiLink : "getFeedPosts"), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ function Posts() {
         <>
             {
                 posts ? posts.map((post, index) => {
-                    return <Post data={post} key={index} />
+                    return <Post color={props.color ? true : false} data={post} key={index} />
                 }) : null
             }
         </>

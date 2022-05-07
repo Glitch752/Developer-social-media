@@ -171,6 +171,36 @@ app.post('/api/v1/auth/login', jsonParser, function (req, res) {
     });
 });
 
+app.get('/api/v1/getUserPosts/:id', jsonParser, function (req, res) {
+    // Temporary placeholder posts for testing
+
+    var data: any = { 
+        response: "Successfully got posts",
+        data: {
+            posts: [
+                {
+                    id: 0,
+                    author: "Test",
+                    title: "Test Post",
+                    sections: [
+                        {
+                            type: "Text",
+                            content: "This is a test post"
+                        },
+                        {
+                            type: "Code",
+                            content: "console.log('Hello World');"
+                        }
+                    ]
+                }
+            ]
+        },
+        success: true 
+    };
+
+    res.send(JSON.stringify(data));
+});
+
 app.post('/api/v1/auth/verify', jsonParser, function (req, res) {
     var data: any = { response: "Request failed", success: false };
 
