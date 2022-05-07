@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 // @ts-ignore
-import styles from '../pages/Feed.module.css';
+import styles from './CommentCreator.module.css';
 
 function CommentCreator(props) {
     const [creatingComment, setCreatingComment] = useState(!props.showButton);

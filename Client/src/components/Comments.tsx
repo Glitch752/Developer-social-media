@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // @ts-ignore
-import styles from '../pages/Feed.module.css';
+import styles from './Comments.module.css';
 // @ts-ignore
 import CommentCreator from './CommentCreator.tsx';
 
