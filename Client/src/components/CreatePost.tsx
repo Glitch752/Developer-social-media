@@ -4,7 +4,7 @@ import 'highlight.js/styles/nord.css';
 import { useRef, useState } from 'react';
 
 // @ts-ignore
-import styles from '../pages/Feed.module.css';
+import styles from './CreatePost.module.css';
 
 const APIlink = "http://localhost:25564/api/v1/";
 

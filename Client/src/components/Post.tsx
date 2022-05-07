@@ -3,7 +3,7 @@ import 'highlight.js/styles/nord.css';
 import { useNavigate } from 'react-router-dom';
 
 // @ts-ignore
-import styles from '../pages/Feed.module.css';
+import styles from './Post.module.css';
 
 // @ts-ignore
 import Comments from './Comments.tsx';
