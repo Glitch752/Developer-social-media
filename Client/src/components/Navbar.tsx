@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom';
-
 // @ts-ignore
 import styles from './Navbar.module.css';
 

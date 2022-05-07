@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // @ts-ignore
 import { useEffectOnce } from '../App.tsx';
@@ -11,6 +11,8 @@ import styles from './User.module.css';
 function User(props) {
     const navigate = useNavigate();
 
+    const { userID } = useParams();
+
     useEffectOnce(() => {
         props.authentication(navigate, 0);
     });
@@ -19,7 +21,7 @@ function User(props) {
         <main>
             <Navbar />
             <span>
-                User content
+                User content for user {userID}
             </span>
         </main>
     )
