@@ -16,7 +16,16 @@
 
 .contentGridCenter {
     grid-area: main;
+    position: relative;
 }
+
+.userBanner {
+    background-color: rgb(48, 25, 25);
+    position: absolute;
+    width: 100%;
+    height: 10rem;
+}
+
 .userContent {
     margin-top: 10rem;
     background-color: var(--nord1);
@@ -44,6 +53,30 @@
 
 .contentGridRight {
     grid-area: right;
+}
+
+.contentSection {
+    width: 100%;
+    background-color: var(--nord2);
+    padding: 0.5rem 0;
+}
+.contentSectionTitle {
+    margin-left: 1rem;    
+}
+
+.followedLanguages {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 1rem;
+}
+.followedLanguage {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--nord10);
+    border-radius: 100vh;
+    padding: 0.1rem 0.5rem;
+    margin: 0.1rem;
+    position: relative;
 }
 
 /* width */

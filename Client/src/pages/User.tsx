@@ -25,6 +25,7 @@ function User(props) {
 
                 </div>
                 <div className={styles.contentGridCenter}>
+                    <div className={styles.userBanner}></div>
                     <div className={styles.userContent}>
                         <div className={styles.userContentUser}>
                             <div className={styles.userContentUserPicture}></div>
@@ -33,7 +34,20 @@ function User(props) {
                     </div>
                 </div>
                 <div className={styles.contentGridRight}>
-                    
+                    <div className={styles.contentSection}>
+                        <span className={styles.contentSectionTitle}>Followed languages:</span>
+                        <div className={styles.followedLanguages}>
+                            {
+                                ["Javascript", "Python", "C#", "Typescript", "Ruby"].map((language, index) => {
+                                    return (
+                                        <div className={styles.followedLanguage} key={index}>
+                                            <span className={styles.followedLanguageName}>{language}</span>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
