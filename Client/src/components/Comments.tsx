@@ -16,10 +16,58 @@ function Comments(props) {
                     id: 2,
                     author: "Author name 2",
                     content: "This is a reply to a comment",
+                    comments: [
+                        {
+                            id: 2,
+                            author: "Author name 2",
+                            content: "This is a reply to a comment",
+                            comments: []
+                        },]
+                },
+                {
+                    id: 2,
+                    author: "Author name 2",
+                    content: "This is a reply to a comment",
+                    comments: []
+                },
+                {
+                    id: 2,
+                    author: "Author name 2",
+                    content: "This is a reply to a comment",
+                    comments: [
+                        {
+                            id: 2,
+                            author: "Author name 2",
+                            content: "This is a reply to a comment",
+                            comments: [
+                                {
+                                    id: 2,
+                                    author: "Author name 2",
+                                    content: "This is a reply to a comment",
+                                    comments: []
+                                },]
+                        },]
+                },
+                {
+                    id: 2,
+                    author: "Author name 2",
+                    content: "This is a reply to a comment",
+                    comments: []
+                },
+                {
+                    id: 2,
+                    author: "Author name 2",
+                    content: "This is a reply to a comment",
                     comments: []
                 },
             ]
-        }
+        },
+        {
+            id: 2,
+            author: "Author name 2",
+            content: "This is a reply to a comment",
+            comments: []
+        },
     ];
 
     return (
@@ -65,8 +113,8 @@ function Comment(props) {
                 <div className={styles.commentButton}>Report</div>
             </div>
             { isReplying ? <CommentCreator showButton={false} /> : null }
+            <div className={styles.replyLine}></div>
             <div className={styles.commentReplies}>
-                <div className={styles.replyLine}></div>
                 {getComments(props.comment.comments)}
             </div>
         </div>
