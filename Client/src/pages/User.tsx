@@ -20,9 +20,22 @@ function User(props) {
     return (
         <main>
             <Navbar />
-            <span>
-                User content for user {userID}
-            </span>
+            <div className={styles.contentGrid}>
+                <div className={styles.contentGridLeft}>
+
+                </div>
+                <div className={styles.contentGridCenter}>
+                    <div className={styles.userContent}>
+                        <div className={styles.userContentUser}>
+                            <div className={styles.userContentUserPicture}></div>
+                            <div className={styles.userContentUserName}>{userID}</div>
+                        </div>
+                    </div>
+                </div>
+                <div className={styles.contentGridRight}>
+                    
+                </div>
+            </div>
         </main>
     )
 }

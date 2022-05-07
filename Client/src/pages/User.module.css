@@ -1,0 +1,69 @@
+.contentGrid {
+    display: grid;
+    grid-template-columns: var(--grid-left-size) 1fr var(--grid-right-size);
+    grid-template-rows: auto;
+    grid-template-areas: "left main right";
+    grid-gap: var(--grid-gap);
+    height: calc(100% - 7rem);
+    margin-top: 5rem;
+    padding: 2rem 0;
+    width: 100%;
+    overflow: auto;
+}
+.contentGridLeft {
+    grid-area: left;
+}
+
+.contentGridCenter {
+    grid-area: main;
+}
+.userContent {
+    margin-top: 10rem;
+    background-color: var(--nord1);
+    min-height: calc(100% - 12rem);
+    padding: 2rem;
+    position: relative;
+}
+
+.userContentUser {
+    display: flex;
+    align-items: flex-end;
+    position: absolute;
+    top: -2rem;
+}
+.userContentUserPicture {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 100%;
+    background-color: var(--nord14);
+}
+.userContentUserName {
+    margin-left: 1rem;
+    font-size: 2rem;
+}
+
+.contentGridRight {
+    grid-area: right;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius: 10px;
+    position: absolute;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
