@@ -33,7 +33,6 @@ function Post(props) {
                     }
                 })}
             </span>
-            <CommentCreator showButton={true} />
             <Comments post={props.data.id} />
         </div>
     )

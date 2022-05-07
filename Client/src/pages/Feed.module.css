@@ -386,6 +386,7 @@ main {
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 1rem;
+    margin-right: 1rem;
 }
 .createCommentError {
     color: var(--nord11);

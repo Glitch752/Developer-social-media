@@ -17,17 +17,20 @@ function Comments(props) {
                     author: "Author name 2",
                     content: "This is a reply to a comment",
                     comments: []
-                }
+                },
             ]
         }
     ];
 
     return (
-        <div className={styles.comments}>
-            {
-                getComments(comments)
-            }
-        </div>
+        <>
+            <CommentCreator showButton={true} />
+            <div className={styles.comments}>
+                {
+                    getComments(comments)
+                }
+            </div>
+        </>
     )
 }
 export default Comments;
@@ -37,17 +40,17 @@ function getComments(comments) {
     return (
         comments.map((comment, index) => {
             return (
-                <Post key={index} comment={comment} />
+                <Comment key={index} comment={comment} />
             )
         })
     )
 }
 
-function Post(props) {
+function Comment(props) {
     const [isReplying, setIsReplying] = useState(false);
 
     const reply = () => {
-        setIsReplying(true);   
+        setIsReplying(true);
     }
 
     return (

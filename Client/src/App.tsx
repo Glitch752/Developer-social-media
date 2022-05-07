@@ -8,6 +8,8 @@ import Login from './pages/Login.tsx';
 // @ts-ignore
 import Feed from './pages/Feed.tsx';
 import { useEffect, useLayoutEffect, useRef } from 'react';
+//@ts-ignore
+import User from './pages/User.tsx';
 
 const apiLink = "http://localhost:25564/api/v1/";
 
@@ -46,6 +48,7 @@ function App() {
           <Route path="/" element={<Redirect authentication={authentication} />} />
           <Route path="/login" element={<Login authentication={authentication} />} />
           <Route path="/feed" element={<Feed authentication={authentication} />} />
+          <Route path="/user/:userID" element={<User authentication={authentication} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
