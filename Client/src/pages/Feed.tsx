@@ -92,6 +92,12 @@ function FollowedLanguages() {
         setFollowedLanguages(newFollowedLanguages);
     }
 
+    const addLanguage = (name) => {
+        let newFollowedLanguages = {...followedLanguages};
+        newFollowedLanguages.followed.push(name);
+        setFollowedLanguages(newFollowedLanguages);
+    }
+
     return (
         <div className={styles.contentSection}>
             <span className={styles.contentSectionTitle}>Followed languages:</span>
@@ -107,6 +113,7 @@ function FollowedLanguages() {
                     })
                 }
             </div>
+            <FollowedLanguageSearch followed={followedLanguages.followed} addLanguage={addLanguage} key={followedLanguages.followed.length} />
             <br />
             <span className={styles.contentSectionTitle}>Recommended languages:</span>
             <div className={styles.followedLanguages}>
@@ -122,4 +129,54 @@ function FollowedLanguages() {
             </div>
         </div>
     )
+}
+
+function FollowedLanguageSearch(props) {
+    let [search, setSearch] = useState("");
+    let [addingLanguage, setAddingLanguage] = useState(false);
+
+    let updateSearch = (e) => {
+        let newSearch = e.target.value;
+        setSearch(newSearch);
+    }
+
+    let openMenu = () => {
+        setAddingLanguage(!addingLanguage);
+    }
+
+    let addLanguage = (language) => {
+        setAddingLanguage(false);
+        props.addLanguage(language);
+    }
+
+    const searchItems = ["Java", "Test", "Foo", "Bar", "Baz", "Something", "Something else"];
+
+    return (
+        <div className={styles.followedLanguagesAdd}>
+            <div onClick={() => openMenu()}>
+                <span className={styles.followedLanguagesAddPlus}>+</span>
+                <span className={styles.followedLanguagesAddTitle}>Add language</span>
+            </div>
+            {
+                addingLanguage ? <div className={styles.followedLanguageAddPopup}>
+                    <input className={styles.followedLanguageAddInput} type="text" placeholder="Search..." onChange={updateSearch} />
+                    <div className={styles.followedLanguageAddPopupList}>
+                        {
+                            searchItems.map((language, index) => {
+                                // Check if the search term is in the language name.
+                                let isMatch = language.toLowerCase().includes(search.toLowerCase()) && !props.followed.includes(language);
+                                if(isMatch) {
+                                    return (
+                                        <div className={styles.followedLanguageAddPopupItem} key={index} onClick={() => addLanguage(language)}>{language}</div>
+                                    )
+                                } else {
+                                    return null;
+                                }
+                            })
+                        }
+                    </div>
+                </div> : null
+            }
+        </div>
+    )   
 }

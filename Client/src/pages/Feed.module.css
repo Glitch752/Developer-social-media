@@ -69,6 +69,57 @@ main {
     color: var(--nord12);
 }
 
+.followedLanguagesAdd {
+    width: 10rem;
+    margin-left: 1rem;
+    align-items: center;
+    background-color: var(--nord1);
+    padding: 0.1rem 0.5rem;
+    margin-top: 0.5rem;
+    border: 1px solid var(--nord3);
+    position: relative;
+}
+.followedLanguagesAdd:hover {
+    background-color: var(--nord2);
+}
+.followedLanguagesAddTitle {
+    margin-left: 0.5rem;
+    font-size: 1rem;
+}
+.followedLanguagesAddPlus {
+    color: var(--nord14);
+    font-size: 1.5rem;
+    text-shadow: 0.2rem 0.2rem var(--nord3);
+}
+.followedLanguageAddPopup {
+    position: absolute;
+    background-color: var(--nord1);
+    top: 100%;
+    right: 0;
+    padding: 0rem;
+    z-index: 200;
+}
+.followedLanguageAddInput {
+    width: 15rem;
+    border: none;
+    outline: none;
+    background-color: var(--nord3);
+    margin: 0;
+    color: var(--nord5);
+    font-size: 1.2rem;
+}
+.followedLanguageAddPopupList {
+    margin-top: 0.5rem;
+    max-height: 20rem;
+    overflow-y: auto;
+}
+.followedLanguageAddPopupItem {
+    padding: 0.2rem;
+}
+.followedLanguageAddPopupItem:hover {
+    background-color: var(--nord2);
+}
+
 .optionsPaneSelector {
     display: flex;
     flex-direction: column;
