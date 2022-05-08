@@ -12,6 +12,7 @@ import Posts from '../components/Posts.tsx';
 import CreatePost from '../components/CreatePost.tsx';
 // @ts-ignore
 import Navbar from '../components/Navbar.tsx';
+import { useState } from 'react';
 
 function Feed(props) {
     const navigate = useNavigate();
@@ -59,34 +60,7 @@ function Feed(props) {
                     </div>
                 </div>
                 <div className={styles.contentGridRight}>
-                    <div className={styles.contentSection}>
-                        <span className={styles.contentSectionTitle}>Followed languages:</span>
-                        <div className={styles.followedLanguages}>
-                            {
-                                ["Javascript", "Python", "C#", "Typescript", "Ruby"].map((language, index) => {
-                                    return (
-                                        <div className={styles.followedLanguage} key={index}>
-                                            <span className={styles.followedLanguageName}>{language}</span>
-                                            <div className={styles.followedLanguageRemove}>X</div>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                        <br />
-                        <span className={styles.contentSectionTitle}>Recommended languages:</span>
-                        <div className={styles.followedLanguages}>
-                            {
-                                ["Go", "Rust", "Java", "Kotlin", "C++", "C"].map((language, index) => {
-                                    return (
-                                        <div className={styles.followedLanguage} key={index}>
-                                            <span className={styles.followedLanguageName}>{language}</span>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                    </div>
+                    <FollowedLanguages />
                 </div>
             </div>
         </main>
@@ -94,3 +68,58 @@ function Feed(props) {
 }
 
 export default Feed;
+
+function FollowedLanguages() {
+    let [followedLanguages, setFollowedLanguages] = useState({followed: ["NONE"], reccomended: ["NONE"]});
+
+    useEffectOnce(() => {
+        // We'll eventually get this data from the server, but for now we're just using a setTimeout.
+        setTimeout(() => {
+            setFollowedLanguages({followed: ["Javascript", "Python", "C#", "Typescript", "Ruby"], reccomended: ["Go", "Rust", "Java", "Kotlin", "C++", "C"]});
+        }, 200);
+    });
+
+    const removeLanguage = (index) => {
+        let newFollowedLanguages = {...followedLanguages};
+        newFollowedLanguages.followed.splice(index, 1);
+        setFollowedLanguages(newFollowedLanguages);
+    }
+
+    const addReccomendedLanguage = (index) => {
+        let newFollowedLanguages = {...followedLanguages};
+        newFollowedLanguages.followed.push(newFollowedLanguages.reccomended[index]);
+        newFollowedLanguages.reccomended.splice(index, 1);
+        setFollowedLanguages(newFollowedLanguages);
+    }
+
+    return (
+        <div className={styles.contentSection}>
+            <span className={styles.contentSectionTitle}>Followed languages:</span>
+            <div className={styles.followedLanguages}>
+                {
+                    JSON.stringify(followedLanguages.followed) === "[\"NONE\"]" ? <span>Loading...</span> : followedLanguages.followed.map((language, index) => {
+                        return (
+                            <div className={styles.followedLanguage} key={index}>
+                                <span className={styles.followedLanguageName}>{language}</span>
+                                <div className={styles.followedLanguageRemove} onClick={() => removeLanguage(index)}>X</div>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+            <br />
+            <span className={styles.contentSectionTitle}>Recommended languages:</span>
+            <div className={styles.followedLanguages}>
+                {
+                    JSON.stringify(followedLanguages.reccomended) === "[\"NONE\"]" ? <span>Loading...</span> : followedLanguages.reccomended.map((language, index) => {
+                        return (
+                            <div className={styles.followedLanguage} key={index}>
+                                <span className={styles.followedLanguageName} onClick={() => addReccomendedLanguage(index)}>{language}</span>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+        </div>
+    )
+}
