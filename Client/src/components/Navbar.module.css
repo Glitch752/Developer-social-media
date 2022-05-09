@@ -11,6 +11,17 @@
     top: 0;
     left: 0;
 }
+.logo {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--nord5);
+    transition: color 0.1s;
+}
+.logo:hover {
+    cursor: pointer;
+    color: var(--nord11);
+}
+
 .searchInput {
     font-size: 2.5rem;
     height: 2.5rem;
