@@ -71,7 +71,12 @@ function CreatePost() {
         let height = e.target.scrollHeight;
 
         e.target.style.height = height + 'px';
-        e.target.parentElement.style.height = height - 32 + 'px';
+
+        if(e.target.value.split("\n").length === 1) {
+            e.target.parentElement.style.height = height - 64 + 'px';
+        } else {
+            e.target.parentElement.style.height = height - 32 + 'px';
+        }
     }
 
     const resizeTextArea = (e) => {

@@ -10,7 +10,7 @@ function Comments(props) {
         {
             id: 1,
             author: "Author name",
-            content: "This is a comment",
+            content: "This is a really long comment. This line should be able to wrap to the next line since it is so long. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.",
             comments: [
                 {
                     id: 2,

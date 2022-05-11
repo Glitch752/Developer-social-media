@@ -48,5 +48,5 @@
     border-bottom: 0.1rem solid var(--nord3);
     border-right: 0.1rem solid var(--nord3);
     position: relative;
-    min-height: 2.5rem;
+    min-height: 1rem;
 }
