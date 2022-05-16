@@ -13,35 +13,35 @@ function Comments(props) {
             content: "This is a really long comment. This line should be able to wrap to the next line since it is so long. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.",
             comments: [
                 {
-                    id: 2,
+                    id: 3,
                     author: "Author name 2",
                     content: "This is a reply to a comment",
                     comments: [
                         {
-                            id: 2,
+                            id: 4,
                             author: "Author name 2",
                             content: "This is a reply to a comment",
                             comments: []
                         },]
                 },
                 {
-                    id: 2,
+                    id: 5,
                     author: "Author name 2",
                     content: "This is a reply to a comment",
                     comments: []
                 },
                 {
-                    id: 2,
+                    id: 6,
                     author: "Author name 2",
                     content: "This is a reply to a comment",
                     comments: [
                         {
-                            id: 2,
+                            id: 7,
                             author: "Author name 2",
                             content: "This is a reply to a comment",
                             comments: [
                                 {
-                                    id: 2,
+                                    id: 8,
                                     author: "Author name 2",
                                     content: "This is a reply to a comment",
                                     comments: []
@@ -49,13 +49,13 @@ function Comments(props) {
                         },]
                 },
                 {
-                    id: 2,
+                    id: 9,
                     author: "Author name 2",
                     content: "This is a reply to a comment",
                     comments: []
                 },
                 {
-                    id: 2,
+                    id: 10,
                     author: "Author name 2",
                     content: "This is a reply to a comment",
                     comments: []
@@ -72,10 +72,10 @@ function Comments(props) {
 
     return (
         <>
-            <CommentCreator showButton={true} />
+            <CommentCreator showButton={true} parentIds={[]} />
             <div className={styles.comments}>
                 {
-                    getComments(comments)
+                    getComments(comments, [])
                 }
             </div>
         </>
@@ -83,12 +83,12 @@ function Comments(props) {
 }
 export default Comments;
 
-function getComments(comments) {
+function getComments(comments, parentIds) {
     if(comments.length === 0) return null;
     return (
         comments.map((comment, index) => {
             return (
-                <Comment key={index} comment={comment} />
+                <Comment parentIds={parentIds} key={comment.id} comment={comment} />
             )
         })
     )
@@ -101,6 +101,9 @@ function Comment(props) {
         setIsReplying(true);
     }
 
+    let parentIds = props.parentIds.slice();
+    parentIds.push(props.comment.id);
+
     return (
         <div className={styles.comment}>
             <div className={styles.commentAuthor}>
@@ -112,10 +115,10 @@ function Comment(props) {
                 <div className={styles.commentButton} onClick={() => reply()}>Reply</div>
                 <div className={styles.commentButton}>Report</div>
             </div>
-            { isReplying ? <CommentCreator showButton={false} /> : null }
+            { isReplying ? <CommentCreator parentIds={parentIds} showButton={false} /> : null }
             <div className={styles.replyLine}></div>
             <div className={styles.commentReplies}>
-                {getComments(props.comment.comments)}
+                {getComments(props.comment.comments, parentIds)}
             </div>
         </div>
     )

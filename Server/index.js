@@ -122,31 +122,20 @@ app.post('/api/v1/auth/login', jsonParser, function (req, res) {
     });
 });
 app.get('/api/v1/getUserPosts/:id', jsonParser, function (req, res) {
-    // Temporary placeholder posts for testing
-    var data = {
-        response: "Successfully got posts",
-        data: {
-            posts: [
-                {
-                    id: 0,
-                    author: "Test",
-                    title: "Test Post",
-                    sections: [
-                        {
-                            type: "Text",
-                            content: "This is a test post"
-                        },
-                        {
-                            type: "Code",
-                            content: "console.log('Hello World');"
-                        }
-                    ]
-                }
-            ]
-        },
-        success: true
-    };
-    res.send(JSON.stringify(data));
+    const body = req.params;
+    var data = { response: "Request failed", success: false };
+    Database_1.posts.find({ userId: body.id }).sort({ dateCreated: -1 }).limit(10).toArray().then((dbRes) => {
+        if (!dbRes) {
+            data = { response: "No posts found", success: false };
+            res.send(JSON.stringify(data));
+            return;
+        }
+        data = { response: "Successfully got posts", success: true, data: { posts: dbRes } };
+        res.send(JSON.stringify(data));
+    }).catch((err) => {
+        data = { response: "Error getting posts", success: false };
+        res.send(JSON.stringify(data));
+    });
 });
 app.post('/api/v1/auth/verify', jsonParser, function (req, res) {
     var data = { response: "Request failed", success: false };

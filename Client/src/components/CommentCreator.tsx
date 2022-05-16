@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 // @ts-ignore
 import styles from './CommentCreator.module.css';
 
+const APIlink = "http://localhost:25564/api/v1/";
+
 function CommentCreator(props) {
     const [creatingComment, setCreatingComment] = useState(!props.showButton);
 
@@ -13,7 +15,7 @@ function CommentCreator(props) {
         errorMessage.current.innerHTML = message;
     }
 
-    const post = () => {
+    const post = async () => {
         if(comment.current.value.replace(/\s/g, '').length === 0) {
             error('Comment cannot be empty');
             return;
@@ -22,8 +24,25 @@ function CommentCreator(props) {
         error("");
 
         // TODO: post comment
-        
-        setCreatingComment(false);
+        let data = {
+            content: comment.current.value,
+            parentIds: props.parentIds
+        };
+
+        const response = await fetch(APIlink + "createPost", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        const json = await response.json();
+
+        console.log(json);
+
+        if(json.success) {
+            setCreatingComment(false);
+        }
     }
 
     useEffect(() => {
